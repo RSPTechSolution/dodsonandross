@@ -1,0 +1,10 @@
+#
+services:
+  # This is an arbitrary name, but should be made description
+  extend_site_info.route_subscriber:
+    # Tell Drupal which class to use
+    class: 'Drupal\extend_site_info\Routing\ExtendSiteInfoRouteSubscriber'
+    # This next code is the key, as it tells Drupal to use our class when
+    # building routes.
+    tags:
+      - { name: event_subscriber }

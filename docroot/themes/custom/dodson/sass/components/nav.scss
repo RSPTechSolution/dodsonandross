@@ -1,0 +1,216 @@
+/**
+* Navigation styles
+*/
+
+.menu--main {
+  z-index: 9;
+  height: 0px;
+  width: 100%;
+  max-width: 768px;
+  overflow: hidden;
+  position: absolute;
+  background-color: $purple;
+  transition: height 0.8s ease;
+  &.open { 
+    z-index: 1;
+    height: 760px;
+  }
+  &__search {
+    width: 90%;
+    position: relative;
+    margin: 20px auto 0;
+    input {
+      width: 80%;
+      text-indent: 30px;
+    }
+    &-icon {
+      top: 2px;
+      left: 2px;
+      width: 23px;
+      height: 23px;
+      position: absolute;
+      background-size: cover;
+      background-image: url("../images/search-btn.jpg");
+    }
+  }
+  .menu {
+    padding: 0;
+    list-style: none;
+    @media (max-width:767px) {
+      margin-left: 0;
+    }
+    li {
+      cursor: pointer;
+      padding: 10px 0;
+      background-color: $purple;
+      transition: background-color 0.5s ease;
+      list-style-type: none;
+      list-style-image: none;
+      a {
+        width: 90%;
+        color: $white;
+        display: block;
+        margin: 0 auto;
+        text-decoration: none;
+        font-size: 12px;
+        font-family: 'Montserrat', sans-serif;
+        @media (max-width:767px) {
+            
+        }
+      }
+      &.open ul {
+        padding: 10px 0;
+      }
+      
+    }
+    .menu-item--mobile {
+      display:block;
+    }
+  }
+  @include respond-to($tablet){
+    .menu {
+      li {
+        padding: 20px 0;
+      }
+      .menu-item--mobile{
+        display: none;
+      }
+    }
+  }
+  @include respond-to($desktop){
+    width: 78%;
+    height: auto;
+    max-width: 100%;
+    position: static;
+    padding: 35px 10px 0 0;
+    .menu {
+      display: flex;
+      margin: 10px 0 10px 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+      justify-content: space-between;
+      li {
+        &:hover {
+          background-color: $brightPurple;
+        }
+        padding: 10px 10px;
+        margin: 0 -10px;
+        text-align: center;
+        a {
+          width: 100%;
+        }
+      }
+      .menu-item--mobile{
+        display: none;
+      }
+    }
+  }
+  @include respond-to($widescreen){
+    .menu{
+      font-size: 14px;
+    }
+  }
+}
+
+
+
+.menu--account{
+  z-index: 9;
+  display: none;
+  .menu{
+    a[data-drupal-link-system-path="user/register"]{
+      display: inline;
+      margin-right: 15px;
+      .user-logged-in &{
+        display: none;
+      }
+    }
+  }
+  @include respond-to($desktop){
+    right: 30px;
+    width: 250px;
+    display: flex;
+    padding-top: 15px;
+    position: absolute;
+    justify-content: space-between;
+    .search-icon {
+      opacity: 0.5;
+      font-size: 13px;
+      display: none !important;
+      &:before {
+        content: '';
+        width: 17px;
+        height: 17px;
+        display: block;
+        position: absolute;
+        margin-left: -22px;
+        background: url('../images/search-icon.png') no-repeat;
+        background-size: cover;
+      }
+    }
+    .txt-search{
+      width: 110px;
+      border: none;
+      background: url('../images/search-icon.png') no-repeat $purple left center;
+      background-size: 15px 15px;
+      color: $textPurple;
+      border-radius: 10px;
+      padding: 6px 5px 5px 20px;
+      outline: none;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 12px;
+      &::placeholder{
+        color: $textPurple;
+      }
+    }
+    ul.menu{
+      display: flex;
+      justify-content: space-between;
+    }
+    .menu{
+      margin: 0;
+      li {
+        padding: 0;
+        line-height: 1;
+        margin-top: 6px;
+        a {
+          opacity: 0.5;
+          color: #FFF;
+          font-size: 13px;
+          text-decoration: none;
+        }
+      }
+    }
+    .menu li a, .search-icon{
+      font-family: 'Open Sans', sans-serif;
+      font-size: 12px;
+    }
+  }
+  @include respond-to($widescreen){
+    width: 235px;
+
+
+    &.contextual-region{
+      width: 275px;
+      ul.menu{
+        width: 139px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+}
+
+.cart-icon{
+  background: url("../images/shopping-cart.svg") no-repeat transparent;
+  display: inline-block;
+  height: 15px;
+  width: 15px;
+  margin-top: 5px;
+  text-indent: -99999px;
+  background-size: contain;
+  opacity: 0.5;
+}
+
+
+

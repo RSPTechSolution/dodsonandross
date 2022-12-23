@@ -1,0 +1,101 @@
+.slider--for--nav--wrapper {
+    background: url("../images/vector-bg.png")no-repeat;
+    background-position: center;
+    background-size: cover;
+    .inner {
+        width: 960px;
+        margin: 0 auto;
+        @media(max-width: 992px) {
+            width: 630px;
+        }
+        @media(max-width: 767px) {
+            width: 100%;
+        }
+    }
+
+    .slider--title  {
+        float: left;
+        width: 100%;
+    }
+    .field--name-field-title {
+        font-size: 38px;
+        font-family: "Merriweather",serif;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 60px;
+        margin-top: 65px;
+        @media(max-width: 767px) {
+            font-size: 24px;
+            margin-bottom: 30px;
+            margin-top: 45px;        
+        }
+    }
+
+    .slider---for--wrapper {
+        margin-bottom: 27px;
+        clear: both;
+        @media(max-width:767px){
+            
+                margin-bottom: 5px;
+        }
+       
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            @media (min-width:1025px) {
+                height: 500px;
+                object-fit: cover;
+                object-position: top;
+            }
+        }
+    }
+
+    .slider---nav--wrapper {
+        img {
+            max-width: 100%;
+            border-radius: 5px;
+            height: auto;
+        }
+
+        .slick-slide {
+            padding: 0 15px;
+            @media(max-width: 767px) {
+                padding: 0 5px;
+            }
+        }
+
+        .slick-arrow {
+            display: none !important;            
+        }
+    }
+    .call--to--action {
+        margin: 60px 0 65px 0;
+        text-align: center;
+
+        @media(max-width: 767px) {
+            margin: 40px 0 50px 0;
+        }
+        .btn {
+            color: #A03C4A;
+            padding: 10px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            background: transparent;
+            box-sizing: border-box;
+            font-weight: 700;
+            transition: 0.3s all;
+            border: 1px solid #A03C4A;
+            &:hover {
+                background: #A03C4A;
+                color:#fff;
+              }
+        }
+    }  
+}
+
+@media(max-width: 767px) {
+    .slick-arrow {
+        display: none !important;
+    }
+}

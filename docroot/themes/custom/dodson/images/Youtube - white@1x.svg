@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="15px" viewBox="0 0 20 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>Youtube - white@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M21.8333333,8 C21.8333333,8 21.6666667,6.58333333 21,6 C20.25,5.16666667 19.4166667,5.16666667 19,5.16666667 C16.1666667,5 12,5 12,5 L12,5 C12,5 7.83333333,5 5,5.16666667 C4.58333333,5.25 3.75,5.25 3,6 C2.41666667,6.58333333 2.16666667,8 2.16666667,8 C2.16666667,8 2,9.58333333 2,11.25 L2,12.75 C2,14.3333333 2.16666667,16 2.16666667,16 C2.16666667,16 2.33333333,17.4166667 3,18 C3.75,18.8333333 4.75,18.75 5.16666667,18.8333333 C6.75,19 12,19 12,19 C12,19 16.1666667,19 19,18.75 C19.4166667,18.6666667 20.25,18.6666667 21,17.9166667 C21.5833333,17.3333333 21.8333333,15.9166667 21.8333333,15.9166667 C21.8333333,15.9166667 22,14.3333333 22,12.6666667 L22,11.1666667 C22,9.58333333 21.8333333,8 21.8333333,8 Z M9.91666667,14.5833333 L9.91666667,9 L15.3333333,11.8333333 L9.91666667,14.5833333 Z" id="path-1"></path>
+    </defs>
+    <g id="D&amp;R-Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Guide----General" transform="translate(-890.000000, -1278.000000)">
+            <g id="Group-4" transform="translate(703.000000, 1053.500000)">
+                <g id="Group" transform="translate(0.448936, 132.803320)">
+                    <g id="uxpower/Icon/App/Youtube" transform="translate(184.551064, 87.222475)">
+                        <g id="Group">
+                            <rect id="Bounding-Box" x="0" y="0" width="24" height="24"></rect>
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <use id="Mask" fill="#CD201F" xlink:href="#path-1"></use>
+                            <g id="uxpower/Mixin/Fill/White" mask="url(#mask-2)" fill="#FFFFFF">
+                                <rect id="Box" x="0" y="0" width="24" height="24"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

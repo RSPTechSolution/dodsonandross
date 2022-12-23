@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the basic_watermark module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function basic_watermark_requirements($phase) {
+  $requirements = [];
+
+  if ($phase == 'runtime' || $phase == 'install') {
+    // Check for the PHP GD library.
+    if (function_exists('imagegd2')) {
+      $info = gd_info();
+      $requirements['basic_watermark_gd'] = [
+        'value' => $info['GD Version'],
+      ];
+
+      // Check for PNG support.
+      if (!function_exists('imagecreatefrompng')) {
+        $requirements['basic_watermark_gd']['severity'] = REQUIREMENT_ERROR;
+        $requirements['basic_watermark_gd']['description'] = t('The GD library for PHP is enabled, but was compiled without PNG support. Check the <a href="http://php.net/manual/ref.image.php">PHP image documentation</a> for information on how to correct this.');
+      }
+    }
+    else {
+      $requirements['basic_watermark_gd'] = [
+        'value' => t('Not installed'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The GD library for PHP is missing or outdated. Check the <a href="http://php.net/manual/book.image.php">PHP image documentation</a> for information on how to correct this.'),
+      ];
+    }
+
+    $requirements['basic_watermark_gd']['title'] = t('GD library PNG support');
+  }
+
+  return $requirements;
+}
+
+/**
+ * Updates existing basic watermark configuration to much the new features.
+ */
+function basic_watermark_update_8001(&$sandbox) {
+  $styles = \Drupal::entityTypeManager()->getStorage('image_style')->loadMultiple();
+
+  foreach ($styles as $style) {
+    $imageEffectCollection = $style->getEffects();
+    $configuration = $imageEffectCollection->getConfiguration();
+
+    foreach ($configuration as &$config) {
+      if ($config['id'] == 'add_watermark') {
+        $new_data = [
+          'watermark_path' => $config['data']['watermark_path'],
+          'apply_type' => 'once',
+          'position' => 'left-top',
+          'margins' => [
+            'left' => !empty($config['data']['margin_x']) ? $config['data']['margin_x'] : 0,
+            'top' => !empty($config['data']['margin_y']) ? $config['data']['margin_y'] : 0,
+            'right' => !empty($config['data']['margin_x']) ? $config['data']['margin_x'] : 0,
+            'bottom' => !empty($config['data']['margin_y']) ? $config['data']['margin_y'] : 0,
+          ],
+        ];
+        $config['data'] = $new_data;
+      }
+    }
+    $imageEffectCollection->setConfiguration($configuration);
+    $style->save();
+  }
+}

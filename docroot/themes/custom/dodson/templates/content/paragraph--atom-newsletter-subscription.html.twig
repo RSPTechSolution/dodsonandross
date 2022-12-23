@@ -1,0 +1,618 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a paragraph.
+ *
+ * Available variables:
+ * - paragraph: Full paragraph entity.
+ *   Only method names starting with "get", "has", or "is" and a few common
+ *   methods such as "id", "label", and "bundle" are available. For example:
+ *   - paragraph.getCreatedTime() will return the paragraph creation timestamp.
+ *   - paragraph.id(): The paragraph ID.
+ *   - paragraph.bundle(): The type of the paragraph, for example, "image" or "text".
+ *   - paragraph.getOwnerId(): The user ID of the paragraph author.
+ *   See Drupal\paragraphs\Entity\Paragraph for a full list of public properties
+ *   and methods for the paragraph object.
+ * - content: All paragraph items. Use {{ content }} to print them all,
+ *   or print a subset such as {{ content.field_example }}. Use
+ *   {{ content|without('field_example') }} to temporarily suppress the printing
+ *   of a given child element.
+ * - attributes: HTML attributes for the containing element.
+ *   The attributes.class element may contain one or more of the following
+ *   classes:
+ *   - paragraphs: The current template type (also known as a "theming hook").
+ *   - paragraphs--type-[type]: The current paragraphs type. For example, if the paragraph is an
+ *     "Image" it would result in "paragraphs--type--image". Note that the machine
+ *     name will often be in a short form of the human readable label.
+ *   - paragraphs--view-mode--[view_mode]: The View Mode of the paragraph; for example, a
+ *     preview would result in: "paragraphs--view-mode--preview", and
+ *     default: "paragraphs--view-mode--default".
+ * - view_mode: View mode; for example, "preview" or "full".
+ * - logged_in: Flag for authenticated user status. Will be true when the
+ *   current user is a logged-in member.
+ * - is_admin: Flag for admin user status. Will be true when the current user
+ *   is an administrator.
+ *
+ * @see template_preprocess_paragraph()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set classes = [
+    'paragraph',
+    'paragraph--type--' ~ paragraph.bundle|clean_class,
+    view_mode ? 'paragraph--view-mode--' ~ view_mode|clean_class,
+    not paragraph.isPublished() ? 'paragraph--unpublished'
+  ]
+%}
+{% block paragraph %}
+<style>.newsletter-banner {
+  width: 100%;
+  background: #651B31;
+  box-sizing: border-box;
+  clear: both;
+  overflow: hidden;
+}
+
+.newsletter-banner .container-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.container-wrap, .page__subscription .paragraph--type--card > .field--name-field-card-section {
+  max-width: 1150px;
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  overflow: hidden;
+}
+
+.newsletter-banner .banner-left {
+  width: 60%;
+  float: left;
+}
+
+.newsletter-banner .banner-left h2 {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 45px;
+  line-height: 57px;
+  color: #FFFFFF;
+  font-family: 'Merriweather'
+}
+
+.newsletter-banner .banner-left p {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: #FFFFFF;
+}
+
+.mail-filed-block {
+  display: inline-flex;
+  width: 511px;
+  margin-top: 30px;
+}
+
+.mail-filed-block input[type="email"] {
+  background-color: #FFFFFF;
+  border: 1px solid #979797;
+  box-sizing: border-box;
+  border-radius: 50px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #979797;
+  padding: 15px;
+  width: calc(100% - 147px);
+  float: left;
+  height: auto;
+}
+
+.mail-filed-block input#mc-embedded-subscribe {
+  width: 139px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.03em;
+  color: #FFFFFF;
+  background: #C06B85;
+  border-radius: 50px;
+  border: 0;
+  padding: 19px 30px 20px;
+  float: left;
+  margin-left: 8px;
+}
+
+.newsletter-banner .banner-right {
+  float: left;
+  width: 40%;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-top: 40px;
+}
+
+.newsletter-banner .banner-right img {
+  width: 100%;
+  height: 100%;
+}
+
+.media-with-desc-block .main-heading {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.main-heading h2 {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 45px;
+  line-height: 57px;
+  font-family: 'Merriweather';
+  margin-bottom: 12px;
+}
+
+.main-heading p {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: center;
+  color: #C06B85;
+}
+
+.media-with-desc-block {
+  padding: 100px 15px;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.block-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 0 65px;
+  margin-bottom: 60px;
+}
+
+.block-list .media-block {
+  width: 50%;
+}
+
+.block-list .media-block img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.block-list .description-block {
+  width: 50%;
+}
+
+.block-list.media-right-block {
+  flex-direction: row-reverse;
+}
+
+.block-list .description-block h3 {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 45px;
+  color: #A03C4A;
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-family: 'Merriweather';
+}
+
+.block-list .description-block p {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  color: #C06B85;
+  margin-bottom: 0;
+}
+
+.free-guide-block {
+  background: #A03C4A;
+  width: 100%;
+}
+
+.free-guide-block .left-img-block {
+  width: 541px;
+  float: left;
+  display: flex;
+}
+
+.free-guide-block .right-desc-block {
+  width: calc(100% - 541px);
+  float: left;
+}
+
+.free-guide-block .right-desc-block h3 {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 45px;
+  color: #FFFFFF;
+  margin: 0;
+  margin-bottom: 10px;
+  font-family: 'Merriweather';
+}
+
+.free-guide-block .right-desc-block p {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #FFFFFF;
+}
+
+.free-guide-block .mail-filed-block input[type="email"] {
+  width: calc(100% - 198px);
+}
+
+.free-guide-block .mail-filed-block button {
+  width: 190px;
+  justify-content: center;
+}
+
+.free-guide-block .mail-filed-block {
+  width: 556px;
+}
+
+.free-guide-block .container-wrap {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+.block-list:last-child {
+  margin-bottom: 0;
+}
+.page__subscription header.header {
+    margin-bottom: 0;
+}
+.page__subscription .newsletter--subscription--wrapper{
+  margin-top: 0;
+}
+.mail-filed-block div#mc_embed_signup {
+    width: 100%;
+}
+.mail-filed-block input[type="email"]::placeholder {
+    color: #979797;
+}
+.page__subscription .subs-main-heading .field--name-field-title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 45px;
+    line-height: 57px;
+    font-family: 'Merriweather';
+    margin-bottom: 12px;
+    color: #651b31;
+}
+.page__subscription .subs-main-heading .field--name-field-text{
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+    color: #C06B85;
+    opacity: 1;
+    margin-bottom: 25px;
+}
+.page__subscription .betty-dadson-wrapper.media-with-desc-block{
+  padding: 0;
+}
+.page__subscription .media-with-desc-block .informative-card {
+    padding: 0;
+}
+
+.page__subscription .betty-dadson-wrapper.media-with-desc-block {
+    padding-bottom: 0;
+}
+.page__subscription .betty-dadson-wrapper .informative-card{
+    padding: 0;
+}
+.page__subscription .newsletter-subscription-block.newsletter-banner .right-desc-block .mail-filed-block input#mc-embedded-subscribe {
+    width: 190px;
+}
+.page__subscription .newsletter-subscription-block.newsletter-banner .right-desc-block .mail-filed-block input#mce-EMAIL {
+    width: calc(100% - 230px);
+}
+.page__subscription .newsletter-subscription-block.newsletter-banner .right-desc-block h2 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 45px;
+    color: #FFFFFF;
+    margin: 0;
+    margin-bottom: 10px;
+    font-family: 'Merriweather';
+
+}
+.page__subscription .newsletter-subscription-block.newsletter-banner .right-desc-block p {
+    color: #fff;
+}
+.page__subscription footer {
+    padding-top: 0;
+}
+.page__subscription .newsletter--subscription--wrapper {
+    background: #A03C4A;
+}
+.page__subscription .newsletter-banner {
+    background: #a03c4a;
+}
+.page__subscription .newsletter-banner .banner-right .field--type-image {
+    display: flex;
+}
+.mail-filed-block .mc-field-group {
+    position: relative;
+}
+.page__subscription .betty-dadson-wrapper.media-with-desc-block .field--name-field-card-section .field--name-field-title {
+    color: #A03C4A;
+    font-weight: 400;
+    line-height: 45px;
+}
+.page__subscription .betty-dadson-wrapper.media-with-desc-block .field--name-field-card-section .field--name-field-text {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    color: #C06B85;
+}
+
+@media(max-width: 1199px) and (min-width: 992px) {
+  .free-guide-block .left-img-block {
+    width: 40%;
+  }
+
+  .free-guide-block .left-img-block img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .free-guide-block .right-desc-block {
+    width: 60%;
+  }
+}
+
+@media(max-width: 991px) and (min-width: 768px) {
+  .newsletter-banner .banner-left {
+    width: 50%;
+  }
+
+  .free-guide-block .right-desc-block {
+    width: 60%;
+    padding: 30px 0;
+  }
+
+  .free-guide-block .left-img-block {
+    width: 40%;
+  }
+
+  .mail-filed-block {
+    width: 100%;
+  }
+
+  .newsletter-banner .banner-right {
+    width: 50%;
+  }
+
+  .free-guide-block .left-img-block img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+@media(max-width: 991px) {
+  .free-guide-block .mail-filed-block {
+    width: 100%;
+    align-items: center;
+  }
+
+   .free-guide-block .mail-filed-block input[type="email"] {
+    width: 100% !important;
+    padding: 8px 15px;
+    margin-bottom: 15px;
+  }
+
+  .free-guide-block .mail-filed-block button {
+    margin-left: 0;
+  }
+
+  .free-guide-block .mail-filed-block {}
+
+  .free-guide-block .mail-filed-block button, .newsletter-subscription-block.newsletter-banner .right-desc-block .mail-filed-block input#mc-embedded-subscribe {
+    margin-left: 8px;
+    font-size: 13px;
+    padding: 12px 15px 12px;
+    width: auto;
+  }
+
+  .free-guide-block .right-desc-block h3, .newsletter-subscription-block.newsletter-banner .right-desc-block h2 {
+    font-size: 30px !important;
+  }
+}
+
+@media (min-width: 768px){
+  .paragraph--type--card.informative-card .field--name-field-columns .paragraph--type--column{
+    align-items: center;
+  }
+  .page__subscription .paragraph--type--card.informative-card .field--name-field-columns {
+      align-items: center;
+      margin-bottom: 60px;
+  }
+  .mail-filed-block input + .mce_inline_error {
+    position: absolute;
+    left: 0;
+    top: auto;
+    bottom: -100px;
+}
+}
+@media(max-width: 767px) {
+  .newsletter-banner .banner-right {
+    display: none;
+  }
+
+  .newsletter-banner .banner-left {
+    width: 100%;
+    padding: 60px 0;
+    text-align: center;
+  }
+
+  .block-list {
+    display: block;
+  }
+
+  .block-list .media-block {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .block-list .description-block {
+    width: 100%;
+  }
+
+  .free-guide-block .left-img-block {
+    display: none;
+  }
+
+  .free-guide-block .container-wrap {
+    display: block;
+  }
+
+  .free-guide-block .right-desc-block {
+    width: 100%;
+    float: left;
+    padding: 60px 0;
+    text-align: center;
+  }
+
+  .newsletter-banner .banner-left h2,
+  .main-heading h2, .page__subscription .subs-main-heading .field--name-field-title {
+    font-size: 36px;
+    line-height: 48px;
+  }
+
+  .main-heading p, .page__subscription .subs-main-heading .field--name-field-text {
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .media-with-desc-block .main-heading {
+    margin-bottom: 30px;
+  }
+
+  .page__subscription .block-list .description-block h3, .page__subscription .betty-dadson-wrapper.media-with-desc-block .field--name-field-card-section .field--name-field-title {
+    font-size: 30px;
+    line-height: 40px;
+  }
+  .paragraph--type--card.informative-card .paragraph--type--card .paragraph--type--title{
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .media-with-desc-block {
+    padding: 50px 15px;
+  }
+  .page__subscription .newsletter--subscription--wrapper{
+    padding: 0;
+  }
+  .page__subscription .paragraph--type--card.informative-card .paragraph--type--card .field--name-field-card-section {
+      padding-left: 0;
+      padding-right: 0;
+  }
+  .page__subscription .betty-dadson-wrapper.media-with-desc-block .field--name-field-card-section .paragraph--type--text {      
+      width: 100%;
+  }
+  .page__subscription .betty-dadson-wrapper.media-with-desc-block.two .field--name-field-columns {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column-reverse;
+  }  
+  .page__subscription .betty-dadson-wrapper.media-with-desc-block .paragraph.paragraph--type--card .paragraph.paragraph--type--text {
+      margin-left: 0;
+      margin-right: 0;
+      width: 100%;
+  }
+  .newsletter-subscription-block.newsletter-banner .right-desc-block .mail-filed-block input#mc-embedded-subscribe{
+    margin-left: 0;
+    width: 100% !important;
+  }
+  .page__subscription footer{
+    overflow: visible;
+  }
+  .footer-top-row .region.region-footer-top{
+    clear: both;
+  }
+}
+
+@media(max-width: 575px) {
+  .mail-filed-block {
+    width: 100%;
+    display: block;
+    float: left;
+  }
+
+  .mail-filed-block input[type="email"] {
+    width: 100%;
+  }
+
+  .mail-filed-block button, .mail-filed-block input#mc-embedded-subscribe {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 15px;
+    justify-content: center;
+  }
+
+  .free-guide-block .mail-filed-block button {
+    width: 100%;
+    margin-left: 0;
+
+  }}</style>
+  <div class="newsletter-subscription-block newsletter-banner">
+    <div class="container-wrap">
+      <div class="banner-left">
+        {% block content %}
+          {{ content.field_newsletter }}
+        {% endblock %}
+        <div class="mail-filed-block">
+          <div id="mc_embed_signup">
+            <form action="https://dodsonandross.us15.list-manage.com/subscribe/post?u=ba2baf641981c98e06fe8d7d3&amp;id=31115ab9bf" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+              <div id="mc_embed_signup_scroll">
+
+                <div class="mc-field-group">
+                  <input class="textfield-style textfield required email" type="email" name="EMAIL" placeholder="Enter email" id="mce-EMAIL" value="">
+                </div>
+
+                <div id="mce-responses" class="clear">
+                  <div class="response" id="mce-error-response" style="display:none"></div>
+                  <div class="response" id="mce-success-response" style="display:none"></div>
+                </div> 
+
+                <div style="position: absolute; left: -5000px;" aria-hidden="true">
+                  <input type="text" name="b_ba2baf641981c98e06fe8d7d3_31115ab9bf" tabindex="-1" value="">
+                </div>
+
+                <div class="clear">
+                  <input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn button">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="banner-right">
+        {{ content.field_image }}     
+      </div>
+    <script type='text/javascript' src='//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js'></script><script type='text/javascript'>(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='MMERGE3';ftypes[3]='text';}(jQuery));var $mcj = jQuery.noConflict(true);</script>
+
+    </div>
+  </div>
+{% endblock paragraph %}

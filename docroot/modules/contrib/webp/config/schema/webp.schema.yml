@@ -1,0 +1,6 @@
+webp.settings:
+  type: config_object
+  mapping:
+    quality:
+      type: integer
+      label: 'Image quality'

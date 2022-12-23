@@ -1,0 +1,5 @@
+services:
+  carlin_custom_block_access.twig_extension:
+    class: Drupal\carlin_custom_block_access\TwigExtension
+    tags:
+      - { name: twig.extension }

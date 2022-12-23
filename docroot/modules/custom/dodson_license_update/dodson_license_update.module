@@ -1,0 +1,318 @@
+<?php
+
+use Drupal\user\Entity\User;
+use \Drupal\commerce_order\Entity\Order;
+use Drupal\commerce_order\Entity\OrderItemInterface;
+use Drupal\commerce_order\Event\OrderEvent;
+use Drupal\commerce_order\Event\OrderEvents;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\commerce_order\Entity\OrderInterface;
+use Drupal\state_machine\Event\WorkflowTransitionEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Drupal\commerce_license\Entity\LicenseInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use \Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+
+function updateLicence($rows, &$context) {
+	$database = \Drupal::database();
+	foreach ($rows as $key => $value) {
+		$uid = $value->uid;
+		// $query = $database->select('user__roles', 'ur');
+		// $query->condition('ur.entity_id', $uid, '=');
+		// $query->fields('ur', ['roles_target_id']);
+		// $result = $query->execute()->fetchcol();
+
+		// if(in_array('video_access', $result)) {
+			
+			// $user = User::load($uid);
+			// $user->addRole('basic_user');
+			// $user->save();
+		// }
+
+		$query1 = $database->select('commerce_license', 'cl');
+		$query1->join('commerce_order', 'co', 'cl.uid = co.uid');
+		$query1->condition('cl.uid', $uid, '=');
+		$query1->condition('cl.state', 'active', '=');
+		$query1->condition('co.type', 'license_content_order', '=');
+		$query1->fields('cl', ['license_id', 'uid', 'state', 'product_variation', 'expiration_type__target_plugin_id', 'granted', 'expires']);
+		$query1->fields('co', ['order_id']);
+		$row = $query1->execute()->fetchAll();
+		if(!empty($row)) {
+			$order = Order::load($row[0]->order_id);
+			$licensable_order_items = getLicensableOrderItems($order);
+			$product_variation = \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->load(211);
+		// echo '<pre>';print_r($product_variation->get('license_type')->first()->getTargetInstance());die;
+
+
+			foreach ($licensable_order_items as $order_item) {
+		      /** @var \Drupal\commerce_license\Entity\LicenseInterface $license */
+		      // $license = $order_item->get('license')->entity;
+		      // We don't need to do anything if there is already an active license
+		      // referenced by this order item.
+		      // if ($license && $license->getState()->getId() === 'active') {
+		      //   continue;
+		      // }
+
+		      // if (!$license) {
+		        $license = createLicenseFromOrderItem($order_item);
+		        $license->setGrantedTime($row[0]->granted);
+		        $license->setExpiresTime($row[0]->expires);
+		      // }
+		      $license->set('state', 'active');
+		      $license->save();
+		    }
+		}
+		
+
+		
+	}
+}
+
+function getLicensableOrderItems(OrderInterface $order) {
+    $order_items = [];
+
+    foreach ($order->getItems() as $order_item) {
+      // Skip order items that do not have a license reference field.
+      // We check order items rather than the purchased entity to allow products
+      // with licenses to be purchased without the checkout flow triggering
+      // our synchronization. This is for cases such as recurring orders, where
+      // the license entity should not be put through the normal workflow.
+      // Checking the order item's bundle for our entity trait is expensive, as
+      // it requires loading the bundle entity to call hasTrait() on it.
+      // For now, just check whether the order item has our trait's field on it.
+      // @see https://www.drupal.org/node/2894805
+      if (!$order_item->hasField('license')) {
+        continue;
+      }
+      // $purchased_entity = $order_item->getPurchasedEntity();
+	    // $entity_manager = \Drupal::entityManager();
+	    $purchased_entity = \Drupal::entityTypeManager()->getStorage('commerce_product_variation')->load(211);
+      // This order item isn't "licensable" if the purchased entity it
+      // references isn't properly configured.
+      if (!$purchased_entity->hasField('license_type') || $purchased_entity->get('license_type')->isEmpty()) {
+        continue;
+      }
+
+      $order_items[] = $order_item;
+    }
+
+    return $order_items;
+}
+
+function createLicenseFromOrderItem(OrderItemInterface $order_item) {
+    /** @var \Drupal\commerce_license\LicenseStorageInterface $license_storage */
+    $entity_manager = \Drupal::entityTypeManager();
+    $license_storage = $entity_manager->getStorage('commerce_license');
+    $license = $license_storage->createFromOrderItem($order_item);
+    // The license is "pending" until it gets activated, either when the order
+    // gets paid, or if the license should be activated on order place.
+    $license->set('state', 'pending');
+    $license->save();
+    // Set the license field on the order item so we have a reference
+    // and can get hold of it in later events.
+    $order_item->license = $license->id();
+    $order_item->save();
+
+    return $license;
+}
+
+function batch_finished(){
+  \Drupal::messenger()->addMessage(t('Data Updated successfully'));
+}
+
+function dodson_license_update_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account) {
+  $current_path = \Drupal::request()->getRequestUri();
+  if ($op != 'view') {
+
+    // Ignore if any other op.
+    return AccessResult::neutral();
+  }
+
+  // Make sure there's a node id.
+  if (empty($node->nid)) {
+    // Should never happen but ignore if no nid.
+    return AccessResult::neutral();
+  }
+
+
+  $configEnabled = \Drupal::config('vapn.vapnconfig')->get('vapn_node_list');
+
+  // Check if it's a valid VAPN content type.
+  if (empty($node->getType()) || !in_array($node->getType(),$configEnabled,TRUE)) {
+
+    // Not a VAPN node type, we don't care.
+    return AccessResult::neutral();
+  }
+
+  // Get the records for this node.
+  $records = \Drupal::database()->select('vapn')
+    ->fields('vapn', array('rid'))
+    ->condition('nid', $node->id())
+    ->execute();
+
+  // Check that there is a record for this node.
+  if (!$allowed_roles = $records->fetchCol()) {
+
+      // No record.
+      return AccessResult::neutral();
+    
+  }
+  
+
+      $roles = $account->getRoles();
+
+    if($current_path == '/videos') {
+        $ret = count(array_intersect($allowed_roles, $account->getRoles())) ?
+
+        // User has access, great success.
+        AccessResult::allowed() :
+
+        // Permissions defined and not enabled, deny.
+        AccessResult::allowed();
+    }
+    elseif($node->bundle() == 'audio_podcast') {
+      $ret = count(array_intersect($allowed_roles, $account->getRoles())) ?
+
+        // User has access, great success.
+        AccessResult::allowed() :
+
+        // Permissions defined and not enabled, deny.
+        AccessResult::forbidden();
+    }
+    elseif(in_array('anonymous', $roles) || in_array('authenticated', $roles) && !in_array('body_sex_client', $roles) && !in_array('body_sex_leader', $roles) && !in_array('basic_user', $roles)) {
+      // Make sure the user has one of the allowed roles.
+      $ret = count(array_intersect($allowed_roles, $account->getRoles())) ?
+
+        // User has access, great success.
+        AccessResult::allowed() :
+
+        // Permissions defined and not enabled, deny.
+        AccessResult::allowed();
+
+      
+    }
+    else{
+     $ret = count(array_intersect($allowed_roles, $account->getRoles())) ?
+
+        // User has access, great success.
+        AccessResult::allowed() :
+
+        // Permissions defined and not enabled, deny.
+        AccessResult::forbidden();
+    }
+    return $ret;
+}
+
+function dodson_license_update_module_implements_alter(&$implementations, $hook) {
+
+    if ($hook == 'node_access') {
+    	
+    	$hookINIT = $implementations['dodson_license_update'];
+      	unset($implementations['vapn']);
+      	$implementations['dodson_license_update'] = $hookINIT;
+    }
+}
+
+
+
+
+function dodson_license_update_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+  if(($view->id() == "audio_podcast" && $view->current_display == 'page_1')) {
+    $account = \Drupal::currentUser();
+    $role = $account->getRoles();
+
+    if(in_array('administrator', $role)) {
+      return;
+    }
+    foreach ($query->where[1]['conditions'] as &$condition_group) {
+
+      if($condition_group['field'] == 'node_field_data.nid') {
+        $condition_check = TRUE;
+
+        $query = \Drupal::database()->select('node_field_data', 'n');
+        $query->join('vapn', 'va', 'va.nid = n.nid');
+        $query->fields('n', ['nid']);
+        $query->condition('n.type', 'audio_podcast', '=');
+        $query->condition('va.rid', 'basic_user', '=');
+        $records = $query->execute()->fetchCol();
+        if(!empty($records)) {
+          foreach ($records as $value_nid) {
+            $vapn_records = \Drupal::database()->select('vapn')
+            ->fields('vapn', array('rid'))
+            ->condition('nid', $value_nid)
+            ->execute();
+            if(!empty($allowed_roles = $vapn_records->fetchCol())) {
+              $ret = array_intersect($allowed_roles, $account->getRoles());
+              if($ret) {
+                $condition_check = False;
+                $condition_group['value'] = $records;
+                $condition_group['operator'] = 'IN';
+              }
+            }
+          }
+        }
+        
+
+        $query1 = \Drupal::database()->select('node_field_data', 'n');
+        $query1->join('vapn', 'va', 'va.nid = n.nid');
+        $query1->fields('n', ['nid']);
+        $query1->condition('n.type', 'audio_podcast', '=');
+        $query1->condition('va.rid', 'body_sex_leader', '=');
+        $records1 = $query1->execute()->fetchCol();
+        if(!empty($records1)) {
+          foreach ($records1 as $value1_nid) {
+            $vapn_records1 = \Drupal::database()->select('vapn')
+            ->fields('vapn', array('rid'))
+            ->condition('nid', $value1_nid)
+            ->execute();
+            if(!empty($allowed_roles1 = $vapn_records1->fetchCol())) {
+              $ret1 = array_intersect($allowed_roles1, $account->getRoles());
+              if($ret1) {
+                $condition_check = False;
+                $condition_group['value'] = $records1;
+                $condition_group['operator'] = 'IN';
+              }
+            }
+          }
+        }
+        
+        
+        $query2 = \Drupal::database()->select('node_field_data', 'n');
+        $query2->join('vapn', 'va', 'va.nid = n.nid');
+        $query2->fields('n', ['nid']);
+        $query2->condition('n.type', 'audio_podcast', '=');
+        $query2->condition('va.rid', 'body_sex_client', '=');
+        $records2 = $query2->execute()->fetchCol();
+        if(!empty($records2)) {
+          foreach ($records2 as $value2_nid) {
+            $vapn_records2 = \Drupal::database()->select('vapn')
+            ->fields('vapn', array('rid'))
+            ->condition('nid', $value2_nid)
+            ->execute();
+            if(!empty($allowed_roles2 = $vapn_records2->fetchCol())) {
+              $ret2 = array_intersect($allowed_roles2, $account->getRoles());
+              if($ret2) {
+                $condition_check = False;
+                $condition_group['value'] = $records2;
+                $condition_group['operator'] = 'IN';
+              }
+            }
+          }
+        }
+        $roles = $account->getRoles();
+
+        if($condition_check == TRUE && (in_array('basic_user', $roles) || in_array('body_sex_client', $roles) || in_array('body_sex_leader', $roles))) {
+          $condition_group['operator'] = '=';
+        }
+        
+      }
+      
+    }
+
+  }
+}
+
+?>

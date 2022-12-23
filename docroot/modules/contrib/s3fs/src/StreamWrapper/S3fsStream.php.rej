@@ -1,0 +1,26 @@
+--- src/StreamWrapper/S3fsStream.php
++++ src/StreamWrapper/S3fsStream.php
+@@ -1608,23 +1608,6 @@ class S3fsStream extends StreamWrapper implements StreamWrapperInterface {
+     return $params;
+   }
+ 
+-  /**
+-   * {@inheritdoc}
+-   *
+-   * Ensure the S3 protocol is registered to this class and not parents.
+-   *
+-   * @param \Aws\S3\S3ClientInterface $client
+-   *   Client object.
+-   * @param string $protocol
+-   *   Protocol to use.
+-   * @param \Aws\CacheInterface|null $cache
+-   *   Cache.
+-   */
+-  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found,Drupal.Commenting.FunctionComment.Missing
+-  public static function register(S3ClientInterface $client, $protocol = 's3', CacheInterface $cache = NULL) {
+-    parent::register($client, $protocol, $cache);
+-  }
+-
+   /**
+    * Helper method to resolve a path to its non-relative location.
+    *

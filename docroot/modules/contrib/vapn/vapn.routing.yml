@@ -1,0 +1,11 @@
+
+vapn.vapn_config_form:
+  path: '/admin/config/vapn/vapnconfig'
+  defaults:
+    _form: '\Drupal\vapn\Form\VapnConfigForm'
+    _title: 'VapnConfigForm'
+  requirements:
+    _permission: 'manage vapn settings'
+  options:
+    _admin_route: TRUE
+

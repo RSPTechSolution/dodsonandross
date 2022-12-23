@@ -1,0 +1,71 @@
+id: d7_s3fs_config
+label: S3fs configurations
+migration_tags:
+  - 'Drupal 7'
+  - s3fs
+source:
+  plugin: variable
+  variables:
+    - s3fs_credentials_file
+    - s3fs_bucket
+    - s3fs_region
+    - s3fs_use_cname
+    - s3fs_domain
+    - s3fs_domain_s3_private
+    - s3fs_use_customhost
+    - s3fs_hostname
+    - s3fs_use_versioning
+    - s3fs_cache_control_header
+    - s3fs_encryption
+    - s3fs_use_https
+    - s3fs_ignore_cache
+    - s3fs_root_folder
+    - s3fs_public_folder
+    - s3fs_private_folder
+    - s3fs_presigned_urls
+    - s3fs_saveas
+    - s3fs_torrents
+    - s3fs_domain_root
+  source_module: s3fs
+process:
+  credentials_file: s3fs_credentials_file
+  bucket: s3fs_bucket
+  region: s3fs_region
+  use_cname: s3fs_use_cname
+  domain: s3fs_domain
+  use_customhost: s3fs_use_customhost
+  hostname: s3fs_hostname
+  cache_control_header: s3fs_cache_control_header
+  encryption: s3fs_encryption
+  use_https: s3fs_use_https
+  ignore_cache: s3fs_ignore_cache
+  root_folder: s3fs_root_folder
+  public_folder:
+    -
+      plugin: get
+      source: s3fs_public_folder
+    -
+      plugin: default_value
+      default_value: 's3fs-public'
+  private_folder:
+    -
+      plugin: get
+      source: s3fs_private_folder
+    -
+      plugin: default_value
+      default_value: 's3fs-private'
+  presigned_urls: s3fs_presigned_urls
+  saveas: s3fs_saveas
+  torrents: s3fs_torrents
+  domain_root:
+    plugin: static_map
+    source: s3fs_domain_root
+    map:
+      'none': 'none'
+      'root': 'root'
+      'public': 'public'
+      'root_public': 'public'
+    default_value: 'none'
+destination:
+  plugin: config
+  config_name: s3fs.settings

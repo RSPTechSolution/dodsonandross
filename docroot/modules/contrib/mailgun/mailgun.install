@@ -1,0 +1,120 @@
+<?php
+
+/**
+ * @file
+ * Contains install/uninstall stuff.
+ */
+
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+use Drupal\mailgun\MailgunHandlerInterface;
+
+/**
+ * Implements hook_install().
+ */
+function mailgun_install() {
+  $config = \Drupal::configFactory()->getEditable('system.mail');
+  $mail_plugins = $config->get('interface');
+  if (in_array('mailgun', array_keys($mail_plugins))) {
+    return;
+  }
+
+  $mail_plugins['mailgun'] = 'mailgun';
+  $config->set('interface', $mail_plugins)->save();
+}
+
+/**
+ * Implements hook_install().
+ */
+function mailgun_uninstall() {
+  $config = \Drupal::configFactory()->getEditable('system.mail');
+  $mail_plugins = $config->get('interface');
+  if (!in_array('mailgun', array_keys($mail_plugins))) {
+    return;
+  }
+
+  unset($mail_plugins['mailgun']);
+  $config->set('interface', $mail_plugins)->save();
+}
+
+/**
+ * Implements hook_requirements().
+ */
+function mailgun_requirements($phase) {
+  $requirements = [];
+
+  if ($phase !== 'runtime') {
+    return $requirements;
+  }
+
+  $requirements = [
+    'mailgun' => [
+      'title' => t('Mailgun'),
+    ],
+  ];
+
+  /** @var \Drupal\mailgun\MailgunHandlerInterface $mailgun */
+  $mailgun_handler = \Drupal::service('mailgun.mail_handler');
+  if ($mailgun_handler->validateMailgunLibrary() === FALSE) {
+    $requirements['mailgun']['value'] = t('The Mailgun library has not been installed correctly.');
+    $requirements['mailgun']['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    if ($mailgun_handler->validateMailgunApiSettings() === FALSE) {
+      $requirements['mailgun']['value'] = t('The Mailgun library is installed but API settings are not configured. Please check your @link.', [
+        '@link' => Link::createFromRoute(t('settings'), 'mailgun.admin_settings_form')->toString(),
+      ]);
+      $requirements['mailgun']['severity'] = REQUIREMENT_WARNING;
+    }
+    else {
+      $requirements['mailgun']['value'] = t('The Mailgun library is installed correctly. API settings are configured.');
+      $requirements['mailgun']['severity'] = REQUIREMENT_OK;
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Rename Mailgun config object name.
+ */
+function mailgun_update_8001() {
+  \Drupal::configFactory()->rename('mailgun.adminsettings', MailgunHandlerInterface::CONFIG_NAME);
+  return t('Mailgun config object was renamed. Please visit configuration page to make sure that your configuration options are correct.');
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Enable tag by mail key. This option can be disabled in admin page.
+ */
+function mailgun_update_8002() {
+  \Drupal::configFactory()
+    ->getEditable(MailgunHandlerInterface::CONFIG_NAME)
+    ->set('tagging_mailkey', TRUE)
+    ->save();
+
+  return t('Mailgun tag by mail key was enabled. See @link for details.', [
+    '@link' => Link::fromTextAndUrl(t('Tagging'), Url::fromUri('https://documentation.mailgun.com/user_manual.html#tagging', [
+      'attributes' => [
+        'onclick' => "target='_blank'",
+      ],
+    ]))->toString(),
+  ]);
+}
+
+/**
+ * Implements hook_update_N().
+ *
+ * Set default API endpoint (US).
+ */
+function mailgun_update_8003() {
+  $mailgun_config = \Drupal::configFactory()->getEditable(MailgunHandlerInterface::CONFIG_NAME);
+  $existing_endpoint = $mailgun_config->get('api_endpoint');
+  if (empty($existing_endpoint)) {
+    $mailgun_config->set('api_endpoint', 'https://api.mailgun.net')->save();
+    return t('Mailgun API endpoint was set to the default (US). Please visit the configuration page if you would like to switch to the European API endpoint.');
+  }
+}

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: base
+label: 'HELP SERVICE'
+group: video
+url: 'https://help.help.com/privacy'
+consent: true

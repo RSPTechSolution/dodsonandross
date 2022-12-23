@@ -1,0 +1,11 @@
+name: 'Cookies Twitter Media'
+type: module
+description: 'Submodule of Cookies to manage Twitter media items (implemented by Twitter Media module) inside of Cookies.'
+core: 8.x
+package: 'COOKiES'
+dependencies:
+  - cookies:cookies
+  - drupal:media
+
+libraries:
+  - cookies_base/default

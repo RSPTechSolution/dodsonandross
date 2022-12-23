@@ -1,0 +1,22 @@
+/**
+ * Image gallery component styles
+ */
+.paragraph--type--card.image-gallery{
+
+  .slick-slide{
+    margin-right: 20px;
+  }
+  img{
+    border-radius: 10px;
+  }
+  .featured__product-image{
+    display: none;
+  }
+
+  @include respond-to($desktop){
+    .featured__product-image{
+      display: block;
+      margin-bottom: 16px;
+    }
+  }
+}

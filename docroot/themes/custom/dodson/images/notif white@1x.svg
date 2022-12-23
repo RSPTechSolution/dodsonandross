@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>notif white@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M8.555,19 L15.445,19 C14.752,20.19 13.476,21 12,21 C10.524,21 9.248,20.19 8.555,19 Z M21,18 L3,18 L3,15.279 L3.684,15.052 C5.069,14.589 6,13.298 6,11.838 L6,9 C6,5.691 8.691,3 12,3 C15.309,3 18,5.691 18,9 L18,11.838 C18,13.298 18.931,14.589 20.316,15.052 L21,15.279 L21,18 Z" id="path-1"></path>
+    </defs>
+    <g id="D&amp;R-Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Guide----General" transform="translate(-748.000000, -1320.000000)">
+            <g id="Group-4" transform="translate(703.000000, 1053.500000)">
+                <g id="Group" transform="translate(0.448936, 132.803320)">
+                    <g id="uxpower/Icon/Notifications" transform="translate(42.463213, 131.500000)">
+                        <g id="Group">
+                            <rect id="Bounding-Box" x="0" y="0" width="24" height="24"></rect>
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <g id="Mask"></g>
+                            <g id="uxpower/Mixin/Fill/White" mask="url(#mask-2)" fill="#FFFFFF">
+                                <rect id="Box" x="0" y="0" width="24" height="24"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

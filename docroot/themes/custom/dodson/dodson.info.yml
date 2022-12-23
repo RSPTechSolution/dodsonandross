@@ -1,0 +1,21 @@
+name: Dodson
+type: theme
+description: 'Dodsonandross.com main theme'
+core_version_requirement: ^8.8 || ^9
+libraries:
+  - dodson/global-css
+  - dodson/global-js
+  - dodson/components-js
+  - dodson/google-maps
+  - dodson/fonts
+  - bootstrap
+base theme: classy
+regions:
+  header: Header
+  banner: Homepage Banner
+  content: Content
+  sidebar_first: 'Sidebar first'
+  footer_top: Footer Before
+  footer: Footer
+  other: Hidden
+  

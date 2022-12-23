@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * @file
+ * Contains webp.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function webp_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the webp module.
+    case 'help.page.webp':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Generates WebP copies of image style derivatives.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements template_preprocess_responsive_image().
+ */
+function webp_preprocess_responsive_image(&$variables) {
+  $webp_sources = [];
+  if (isset($variables['sources'])) {
+    foreach ($variables['sources'] as $source) {
+      /** @var \Drupal\Core\Template\Attribute $source */
+
+      // Blazy module is using another srcset attribute.
+      $srcset_attribute_key = FALSE;
+      if ($source->offsetExists('data-srcset')) {
+        $srcset_attribute_key = 'data-srcset';
+      }
+      elseif ($source->offsetExists('srcset')) {
+        $srcset_attribute_key = 'srcset';
+      }
+
+      if ($srcset_attribute_key !== FALSE) {
+        $srcset_orig = $source->offsetGet($srcset_attribute_key)->value();
+
+        /* @var \Drupal\webp\Webp $webp */
+        $webp = \Drupal::service('webp.webp');
+        $webp_srcset = $webp->getWebpSrcset($srcset_orig);
+
+        // Create a new source pointing to the webp URL.
+        $webp_source = clone $source;
+        $webp_source->offsetSet($srcset_attribute_key, $webp_srcset);
+        $webp_source->offsetSet('type', 'image/webp');
+        $webp_sources[] = $webp_source;
+      }
+    }
+
+    // Add the new sources at the top of the list.
+    $variables['sources'] = array_merge($webp_sources, $variables['sources']);
+
+    // Never output a single image tag, because
+    // we will always have at least two sources.
+    $variables['output_image_tag'] = FALSE;
+  }
+}

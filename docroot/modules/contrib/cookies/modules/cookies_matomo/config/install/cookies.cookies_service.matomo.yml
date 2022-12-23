@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - cookies_matomo
+id: matomo
+label: 'Matomo Analytics'
+group: tracking
+info:
+  format: 'full_html'
+  value: ''
+url: 'https://matomo.org/privacy-policy/'
+consent: true

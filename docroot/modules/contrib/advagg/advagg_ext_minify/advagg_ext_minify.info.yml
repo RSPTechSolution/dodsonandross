@@ -1,0 +1,8 @@
+name: 'AdvAgg External Minification'
+description: 'Minify Javascript and/or CSS with a command line minifier.'
+package: 'Advanced CSS/JS Aggregation'
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - advagg:advagg
+type: module
+configure: advagg_ext_minify.settings

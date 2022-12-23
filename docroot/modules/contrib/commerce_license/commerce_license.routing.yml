@@ -1,0 +1,20 @@
+entity.commerce_license.license_types:
+  path: '/admin/commerce/config/license-types'
+  defaults:
+    _controller: 'Drupal\commerce_license\Controller\LicenseTypesAdminController::adminPage'
+    _title: 'License types'
+  requirements:
+    _permission: 'access commerce administration pages'
+  options:
+    _admin_route: TRUE
+
+entity.commerce_license.field_ui_fields:
+  path: '/admin/commerce/config/license-types/{bundle}'
+  defaults:
+    _controller: 'Drupal\commerce_license\Controller\LicenseTypesAdminController::bundlePage'
+  requirements:
+    _permission: 'access commerce administration pages'
+  options:
+    _admin_route: TRUE
+    parameters:
+      bundle: string

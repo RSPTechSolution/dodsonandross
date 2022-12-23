@@ -1,0 +1,306 @@
+<?php
+
+/**
+ * @file
+ * Extends Commerce License with the ability to sell access to files.
+ */
+
+use Drupal\commerce_file\ComputedLicensedFiles;
+use Drupal\commerce_license\Entity\LicenseInterface;
+use Drupal\commerce_product\Entity\ProductVariationTypeInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Link;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\Core\Url;
+use Drupal\file\FileInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_file_theme() {
+  return [
+    'commerce_file_download_link' => [
+      'variables' => ['file' => NULL, 'description' => NULL, 'attributes' => []],
+    ],
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for files.
+ */
+function commerce_file_file_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  if (!in_array($operation, ['download', 'view'])) {
+    return AccessResult::neutral();
+  }
+  if ($account->hasPermission('bypass license control') ||
+    $account->hasPermission('administer commerce_license')) {
+    return AccessResult::neutral();
+  }
+  if ($account->id() === $entity->getOwnerId()) {
+    return AccessResult::neutral();
+  }
+  assert($entity instanceof FileInterface);
+  /** @var \Drupal\commerce_file\LicenseFileManagerInterface $license_file_manager */
+  $license_file_manager = \Drupal::service('commerce_file.license_file_manager');
+  // This file is not licensable, no opinion on access.
+  if (!$license_file_manager->isLicensable($entity)) {
+    return AccessResult::neutral();
+  }
+
+  $active_licenses = $license_file_manager->getActiveLicenses($entity, $account);
+  // We forbid access to the file if it's licensable and no active license
+  // that can be downloaded for the current user exists.
+  $active_licenses = array_filter($active_licenses, function (LicenseInterface $license) use ($license_file_manager, $entity, $account) {
+    return $license_file_manager->canDownload($license, $entity, $account);
+  });
+
+  return AccessResult::forbiddenIf(!$active_licenses);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for licenses.
+ */
+function commerce_file_commerce_license_access(EntityInterface $entity, $operation, AccountInterface $account) {
+  // Note this logic should probably live in Commerce License, but since we
+  // limit our logic to file licenses, it's probably fine to keep the logic here
+  // for the time being.
+  assert($entity instanceof LicenseInterface);
+  if ($operation !== 'view' ||
+    $entity->bundle() !== 'commerce_file' ||
+    $entity->getState()->getId() !== 'active') {
+    return AccessResult::neutral();
+  }
+  // Grand access to file licenses if they're referenced by an order item
+  // the user has access to.
+  $order_item_storage = \Drupal::entityTypeManager()->getStorage('commerce_order_item');
+  $result = $order_item_storage->getQuery()
+    ->condition('license', $entity->id())
+    ->accessCheck(FALSE)
+    ->execute();
+
+  if (!$result) {
+    return AccessResult::neutral();
+  }
+  $order_item = $order_item_storage->load(reset($result));
+
+  return AccessResult::allowedIf($order_item->access('view', $account))
+    ->addCacheableDependency($order_item);
+}
+
+/**
+ * Implements hook_file_download().
+ */
+function commerce_file_file_download($uri) {
+  $files = \Drupal::entityTypeManager()
+    ->getStorage('file')
+    ->loadByProperties([
+      'uri' => $uri,
+    ]);
+
+  // No files matching the uri, nothing more we can do.
+  if (!$files) {
+    return;
+  }
+  /** @var \Drupal\file\FileInterface[] $files */
+  foreach ($files as $item) {
+    // Since some database servers sometimes use a case-insensitive comparison
+    // by default, double check that the filename is an exact match.
+    if ($item->getFileUri() === $uri) {
+      $file = $item;
+      break;
+    }
+  }
+
+  // No file found, or a temporary file found, do nothing.
+  if (!isset($file) || !$file->isPermanent()) {
+    return;
+  }
+  // Note that the file access is already checked by file_file_download(), so
+  // we don't have to worry about that here.
+  /** @var \Drupal\commerce_file\LicenseFileManagerInterface $license_file_manager */
+  $license_file_manager = \Drupal::service('commerce_file.license_file_manager');
+
+  // If the file is not licensable, no need to do anything.
+  if (!$license_file_manager->isLicensable($file)) {
+    return;
+  }
+  $licenses = $license_file_manager->getActiveLicenses($file);
+  // We don't need to return '-1' once again here, since file_file_download()
+  // will take care of that on our behalf after invoking our file access logic.
+  if (!$licenses) {
+    return;
+  }
+  // Use the first active license returned when recording file downloads, since
+  // we have no reliable way of knowing which license to use when logging
+  // file downloads.
+  $license = reset($licenses);
+  // Add custom headers that will be used by our file response subscriber
+  // to record file downloads on Kernel terminate.
+  // Unfortunately, the core File module doesn't dispatch an event right before
+  // a file is downloaded forcing us to go with that approach.
+  return [
+    'X-Commerce-File-ID' => $file->id(),
+    'X-Commerce-License-ID' => $license->id(),
+  ];
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function commerce_file_form_commerce_product_variation_type_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form['#validate'][] = 'commerce_file_product_variation_type_form_validate';
+  $form['actions']['submit']['#submit'][] = 'commerce_file_product_variation_type_form_submit';
+}
+
+/**
+ * Validation handler for commerce_file_form_commerce_product_variation_type_form_alter().
+ */
+function commerce_file_product_variation_type_form_validate(array &$form, FormStateInterface $form_state) {
+  // Automatically select the license trait if the file trait is selected.
+  $traits = $form_state->getValue('traits');
+  $original_traits = $form_state->getValue('original_traits');
+  if ($traits['commerce_file'] !== 0) {
+    if (empty($traits['commerce_license']) && !in_array('commerce_license', $original_traits)) {
+      $form_state->setValue('license_trait_auto_configured', TRUE);
+      $form_state->setValue(['traits', 'commerce_license'], 'commerce_license');
+      $form_state->setValue('license_types', ['commerce_file' => 'commerce_file']);
+    }
+  }
+}
+
+/**
+ * Submission handler handler for commerce_file_form_commerce_product_variation_type_form_alter().
+ */
+function commerce_file_product_variation_type_form_submit(array $form, FormStateInterface $form_state) {
+  if ($form_state->hasValue('license_trait_auto_configured')) {
+    \Drupal::messenger()->addMessage(t('The file download trait requires the license trait to work. The license trait has been enabled with a default configuration that supports file licenses.'));
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function commerce_file_entity_presave(EntityInterface $entity) {
+  $entity_type_id = $entity->getEntityTypeId();
+  if (!in_array($entity_type_id, ['commerce_license', 'commerce_product_variation'])) {
+    return;
+  }
+  assert($entity instanceof ContentEntityInterface);
+  $clear_cache = FALSE;
+  // When a product variation or a file license gets saved, clear the license
+  // file manager static cache.
+  if ($entity_type_id === 'commerce_product_variation' && $entity->hasField('commerce_file')) {
+    $clear_cache = TRUE;
+  }
+  elseif ($entity_type_id === 'commerce_license' && $entity->bundle() === 'commerce_file') {
+    $clear_cache = TRUE;
+  }
+  if ($clear_cache) {
+    /** @var \Drupal\commerce_file\LicenseFileManagerInterface $license_file_manager */
+    $license_file_manager = \Drupal::service('commerce_file.license_file_manager');
+    $license_file_manager->resetCache();
+  }
+}
+
+/**
+ * Prepares variables for file download link templates.
+ *
+ * Copied from template_preprocess_file_link.
+ *
+ * Default template: commerce-file-download-link.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - file: A File entity to which the link will be created.
+ *   - icon_directory: (optional) A path to a directory of icons to be used for
+ *     files. Defaults to the value of the "icon.directory" variable.
+ *   - description: A description to be displayed instead of the filename.
+ *   - attributes: An associative array of attributes to be placed in the a tag.
+ */
+function template_preprocess_commerce_file_download_link(array &$variables) {
+  /** @var \Drupal\file\FileInterface $file */
+  $file = $variables['file'];
+  $options = [];
+
+  // @todo Wrap in file_url_transform_relative(). This is currently
+  // impossible. As a work-around, we currently add the 'url.site' cache context
+  // to ensure different file URLs are generated for different sites in a
+  // multisite setup, including HTTP and HTTPS versions of the same site.
+  // Fix in https://www.drupal.org/node/2646744.
+  $variables['#cache']['contexts'][] = 'url.site';
+
+  $mime_type = $file->getMimeType();
+  // Set options as per anchor format described at
+  // http://microformats.org/wiki/file-format-examples
+  $options['attributes']['type'] = $mime_type . '; length=' . $file->getSize();
+
+  // Use the description as the link text if available.
+  if (empty($variables['description'])) {
+    $link_text = $file->getFilename();
+  }
+  else {
+    $link_text = $variables['description'];
+    $options['attributes']['title'] = $file->getFilename();
+  }
+
+  // Classes to add to the file field for icons.
+  $classes = [
+    'file',
+    // Add a specific class for each and every mime type.
+    'file--mime-' . strtr($mime_type, ['/' => '-', '.' => '-']),
+    // Add a more general class for groups of well known MIME types.
+    'file--' . file_icon_class($mime_type),
+  ];
+
+  // Set file classes to the options array.
+  $variables['attributes'] = new Attribute($variables['attributes']);
+  $variables['attributes']->addClass($classes);
+  $variables['file_size'] = format_size($file->getSize());
+  $route_parameters = ['file' => $file->id()];
+
+  $variables['link'] = Link::fromTextAndUrl($link_text, Url::fromRoute('commerce_file.download', $route_parameters, $options))->toRenderable();
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function commerce_file_form_commerce_license_form_alter(&$form, FormStateInterface $form_state) {
+  // Restrict the "product_variation" autocomplete to product variation types
+  // having the "commerce_file" trait enabled.
+  if (isset($form['product_variation'], $form['product_variation']['widget'][0]['target_id']['#selection_settings'])) {
+    /** @var \Drupal\commerce_license\Entity\LicenseInterface $license */
+    $license = $form_state->getFormObject()->getEntity();
+    if ($license->bundle() === 'commerce_file') {
+      $product_variation_type_storage = \Drupal::entityTypeManager()->getStorage('commerce_product_variation_type');
+      $eligible_variation_types = array_filter($product_variation_type_storage->loadMultiple(), function (ProductVariationTypeInterface $variation_type) {
+        return $variation_type->hasTrait('commerce_file');
+      });
+      $eligible_variation_types = array_keys($eligible_variation_types);
+      $form['product_variation']['widget'][0]['target_id']['#selection_settings']['target_bundles'] = array_combine($eligible_variation_types, $eligible_variation_types);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info().
+ */
+function commerce_file_entity_bundle_field_info(EntityTypeInterface $entity_type, $bundle, array $base_field_definitions) {
+  if ($entity_type->id() === 'commerce_license' && $bundle === 'commerce_file') {
+    $fields['licensed_files'] = BaseFieldDefinition::create('file')
+      ->setLabel(t('Licensed files'))
+      ->setDescription(t('Product applications referencing the product categories that are referenced by the product'))
+      ->setSetting('target_type', 'file')
+      ->setComputed(TRUE)
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setClass(ComputedLicensedFiles::class);
+
+    return $fields;
+  }
+}

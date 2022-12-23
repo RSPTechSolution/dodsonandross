@@ -1,0 +1,165 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_price
+    - commerce_recurring
+    - options
+id: commerce_subscription.license.default
+targetEntityType: commerce_subscription
+bundle: license
+mode: default
+content:
+  billing_schedule:
+    type: entity_reference_label
+    weight: 15
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  created:
+    label: inline
+    type: timestamp
+    weight: 2
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  ends:
+    label: inline
+    type: timestamp
+    weight: 6
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  initial_order:
+    type: subscription_orders
+    weight: 0
+    region: content
+    label: above
+    settings:
+      view: commerce_subscription_initial_order_admin
+    third_party_settings: {  }
+  next_renewal:
+    label: inline
+    type: timestamp
+    weight: 11
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  orders:
+    type: subscription_orders
+    weight: 1
+    region: content
+    label: above
+    settings:
+      view: commerce_subscription_orders_admin
+    third_party_settings: {  }
+  payment_method:
+    type: entity_reference_entity_view
+    weight: 14
+    region: content
+    label: inline
+    settings:
+      link: true
+      view_mode: default
+    third_party_settings: {  }
+  purchased_entity:
+    type: entity_reference_label
+    weight: 12
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  renewed:
+    label: inline
+    type: timestamp
+    weight: 10
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  scheduled_changes:
+    label: hidden
+    type: commerce_scheduled_change_default
+    weight: 16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  starts:
+    label: inline
+    type: timestamp
+    weight: 5
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  state:
+    label: hidden
+    type: list_default
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  store_id:
+    type: entity_reference_label
+    weight: 8
+    region: content
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {  }
+  trial_ends:
+    label: inline
+    type: timestamp
+    weight: 4
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  trial_starts:
+    label: inline
+    type: timestamp
+    weight: 3
+    region: content
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_label
+    weight: 9
+    region: content
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+  unit_price:
+    type: commerce_price_default
+    weight: 13
+    region: content
+    label: inline
+    settings:
+      strip_trailing_zeroes: false
+      currency_display: symbol
+    third_party_settings: {  }
+hidden:
+  quantity: true
+  title: true

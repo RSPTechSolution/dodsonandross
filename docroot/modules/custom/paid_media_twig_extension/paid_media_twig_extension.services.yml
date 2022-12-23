@@ -1,0 +1,5 @@
+services:
+  paid_media_twig_extension.twig.extension:
+    class: Drupal\paid_media_twig_extension\TwigExtension
+    tags:
+      - { name: twig.extension }

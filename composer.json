@@ -1,0 +1,204 @@
+{
+    "name": "acquia/acquia-ra-composer",
+    "description": "Project json for Acquia Remote Administration Composer builds",
+    "type": "project",
+    "license": "proprietary",
+    "repositories": {
+        "drupal": {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        "asset-packagist": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "MyApp\\": "src"
+        }
+    },
+    "require": {
+        "cboden/ratchet": "^0.4.3",
+        "composer/installers": "^1.2.0",
+        "cweagans/composer-patches": "^1.6.5",
+        "drupal/acl": "^1.0.0-alpha2",
+        "drupal/address": "^1.8.0",
+        "drupal/admin_toolbar": "^3.2",
+        "drupal/advagg": "4.x-dev@dev",
+        "drupal/advancedqueue": "^1.0.0-rc1",
+        "drupal/audiofield": "^1.10",
+        "drupal/basic_watermark": "^2.0",
+        "drupal/better_exposed_filters": "^5.0@beta",
+        "drupal/block_ajax": "^2.1",
+        "drupal/block_exclude_pages": "^2.0",
+        "drupal/bootstrap": "^3.21.0",
+        "drupal/captcha": "^1.0.0",
+        "drupal/colorbox": "^1.4.0",
+        "drupal/commerce": "^2.21",
+        "drupal/commerce_choose_price": "^1.2.0",
+        "drupal/commerce_file": "^2.0@beta",
+        "drupal/commerce_license": "^2.0.0-alpha18",
+        "drupal/commerce_paypal": "^1.0@RC",
+        "drupal/commerce_stripe": "^1.0@RC",
+        "drupal/contact_storage": "^1.0.0",
+        "drupal/content_access": "^1.0@alpha",
+        "drupal/cookies": "^1.0",
+        "drupal/core": "^9.1",
+        "drupal/ctools": "^3.2.0",
+        "drupal/devel": "^4.1",
+        "drupal/dropzonejs": "^2.0.0",
+        "drupal/ds": "^3.5.0",
+        "drupal/embed": "^1.3.0",
+        "drupal/entity": "^1.0.0",
+        "drupal/entity_browser": "^2.4.0",
+        "drupal/entity_clone": "^1.0.0-beta3",
+        "drupal/entity_embed": "^1.0.0",
+        "drupal/entity_reference_revisions": "^1.8.0",
+        "drupal/eu_cookie_compliance": "^1.19",
+        "drupal/extlink": "^1.2.0",
+        "drupal/field_group": "^3.0.0",
+        "drupal/field_hidden": "^2.0",
+        "drupal/field_permissions": "^1.0.0-rc2",
+        "drupal/file_browser": "^1.2.0",
+        "drupal/google_analytics": "^3.0.0",
+        "drupal/honeypot": "^1.30.0",
+        "drupal/iframe": "^2.20",
+        "drupal/imageapi_optimize_webp": "^2.0@beta",
+        "drupal/inline_entity_form": "^1.0.0-rc3",
+        "drupal/interval": "^1.5.0",
+        "drupal/lazyloader": "^1.0@alpha",
+        "drupal/link_class": "^2.0",
+        "drupal/linkit": "^6.0@beta",
+        "drupal/login_emailusername": "^1.2",
+        "drupal/mailchimp": "^1.11.0",
+        "drupal/mailgun": "^1.0.0-rc2",
+        "drupal/mailsystem": "^4.2.0",
+        "drupal/media_entity_instagram": "^3.0",
+        "drupal/metatag": "^1.21",
+        "drupal/mimemail": "^1.0@alpha",
+        "drupal/minifyhtml": "^1.12",
+        "drupal/modules_weight": "^1.9",
+        "drupal/native_lazy_loading": "^1.1@RC",
+        "drupal/paragraphs": "^1.11.0",
+        "drupal/pathauto": "^1.6.0",
+        "drupal/profile": "^1.1.0",
+        "drupal/recaptcha": "^3.0",
+        "drupal/recurring_period": "^1.0.0-alpha5",
+        "drupal/rules": "^3.0.0-alpha5",
+        "drupal/s3fs": "^3.0@RC",
+        "drupal/search_api": "^1.15.0",
+        "drupal/semanticviews": "^2.2.0",
+        "drupal/shield": "^1.2.0",
+        "drupal/simple_sitemap": "^4.1",
+        "drupal/sitemap": "^2.0@beta",
+        "drupal/smtp": "^1.0.0-beta7",
+        "drupal/social_auth": "^3.0",
+        "drupal/social_auth_facebook": "^3.0@RC",
+        "drupal/social_auth_google": "^3.0@RC",
+        "drupal/state_machine": "^1.0.0",
+        "drupal/svg_image": "^1.16",
+        "drupal/taxonomy_menu": "^3.4.0",
+        "drupal/token": "^1.6.0",
+        "drupal/tvi": "^1.0@RC",
+        "drupal/twig_field_value": "^2.0",
+        "drupal/twig_tweak": "^3.1",
+        "drupal/typed_data": "^1.0.0-alpha4",
+        "drupal/vapn": "^1.5",
+        "drupal/video_embed_field": "^2.3.0",
+        "drupal/views_autocomplete_filters": "^1.3",
+        "drupal/views_bulk_operations": "^3.12",
+        "drupal/views_data_export": "^1.0",
+        "drupal/views_field_view": "^1.0@beta",
+        "drupal/views_taxonomy_term_name_depth": "^7.0",
+        "drupal/viewsreference": "^1.4.0",
+        "drupal/webp": "^1.0@beta",
+        "drush/drush": "^11.3"
+    },
+    "require-dev": {
+        "drupal/core-dev": "^9.1"
+    },
+    "config": {
+        "sort-packages": true,
+        "vendor-dir": "vendor",
+        "allow-plugins": {
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "cweagans/composer-patches": true,
+            "oomphinc/composer-installers-extender": true
+        }
+    },
+    "conflict": {
+        "drupal/core": "7.*"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "enable-patching": true,
+        "patches": {
+            "drupal/[module_name]": {
+                "Note regarding the nature of the patch being applied": "https://www.drupal.org/files/issues/[patch_name].patch"
+            }
+        },
+        "drupal-scaffold": {
+            "excludes": [
+                ".htaccess",
+                "robots.txt"
+            ]
+        },
+        "installer-types": [
+            "bower-asset",
+            "npm-asset"
+        ],
+        "installer-paths": {
+            "docroot/core": [
+                "type:drupal-core"
+            ],
+            "docroot/modules/contrib/{$name}": [
+                "type:drupal-module"
+            ],
+            "docroot/modules/custom/{$name}": [
+                "type:drupal-custom-module"
+            ],
+            "docroot/profiles/contrib/{$name}": [
+                "type:drupal-profile"
+            ],
+            "docroot/profiles/custom/{$name}": [
+                "type:drupal-custom-profile"
+            ],
+            "docroot/themes/contrib/{$name}": [
+                "type:drupal-theme"
+            ],
+            "docroot/themes/custom/{$name}": [
+                "type:drupal-custom-theme"
+            ],
+            "docroot/libraries/{$name}": [
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
+            ]
+        },
+        "merge-plugin": {
+            "include": [
+                "docroot/modules/custom/*/composer.json"
+            ],
+            "replace": false,
+            "ignore-duplicates": true
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@composer drupal-scaffold",
+            "find docroot vendor -name '.git' | xargs rm -rf",
+            "find docroot vendor -name '.github' | xargs rm -rf"
+        ],
+        "post-update-cmd": [
+            "@composer drupal-scaffold",
+            "find docroot vendor -name '.git' | xargs rm -rf",
+            "find docroot vendor -name '.github' | xargs rm -rf"
+        ],
+        "drupal-scaffold": [
+            "DrupalComposer\\DrupalScaffold\\Plugin::scaffold"
+        ]
+    }
+}

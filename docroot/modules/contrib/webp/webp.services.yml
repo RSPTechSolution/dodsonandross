@@ -1,0 +1,9 @@
+services:
+  webp.route_subscriber:
+    class: Drupal\webp\Routing\RouteSubscriber
+    arguments: ['@module_handler']
+    tags:
+      - { name: event_subscriber }
+  webp.webp:
+    class: Drupal\webp\Webp
+    arguments: ['@image.factory', '@logger.factory', '@string_translation', '@config.factory', '@file_system']

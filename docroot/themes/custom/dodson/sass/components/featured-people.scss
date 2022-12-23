@@ -1,0 +1,87 @@
+
+/**
+ * Bodysex leaders specific styles
+ */
+.paragraph--type--card.featured-people{
+  padding-bottom: 80px;
+  .slick-slide {
+    width: 250px;
+  }
+  .slider{
+    margin-bottom: 10px;
+    .paragraph--type--card {
+      padding: 35px;
+      background: #FFF;
+      text-align: center;
+      margin-bottom: 0px;
+      box-sizing: border-box;
+      min-height: 295px;
+      cursor: pointer;
+      transition: 0.3s all;
+      &:hover {
+        background: #A03C4A;
+        .field--type-link {
+          a {
+            color:#fff;
+          }
+        }
+
+        .field--name-field-text {
+          color:#fff;
+          opacity: 1;
+        }
+
+        .paragraph--type--text{
+          opacity: 1;
+        }
+      }
+    }
+    .paragraph--type--image{
+      width: 80%;
+      margin-bottom: 5px;
+      img{
+        max-height: 165px;
+        border-radius: 100px;
+      }
+    }
+    .paragraph--type--title-with-link-{
+      font-size: 18px;
+    }
+    .paragraph--type--text{
+      opacity: .6;
+      color: $black;
+      font-size: 15px;
+      margin-top: 10px;
+      min-height: 65px;
+    }
+  }
+  .paragraph--type--atom-button{
+    margin-top: 50px;
+  }
+
+  @include respond-to($tablet){
+
+    padding-bottom: 50px;
+
+    .slider .paragraph--type--card {
+      padding: 28px;
+    }
+    .slick-slide {
+      margin-right: 25px;
+    }
+
+  }
+
+  @include respond-to($desktop){
+    .slider{
+      margin-bottom: 50px;
+    }
+    .paragraph--type--image{
+      width: 55%;
+    }
+    .paragraph--type--card {
+      min-height: 240px;
+    }
+  }
+
+}

@@ -1,0 +1,30 @@
+id: d6_d7_acl_user
+label: Drupal 6/7 Access Control Lists users table
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: d6_d7_acl_table
+  table_name: acl_user
+  fields_list:
+    - acl_id
+    - uid
+  ids:
+    acl_id:
+      type: integer
+    uid:
+      type: integer
+process:
+  acl_id: acl_id
+  uid: uid
+destination:
+  plugin: acl_table
+  table_name: acl_user
+  fields_list:
+    - acl_id
+    - uid
+  ids:
+    acl_id:
+      type: integer
+    uid:
+      type: integer

@@ -1,0 +1,83 @@
+<?php
+
+/**
+ * @file
+ * Contains cookies_ga.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\cookies\CookiesKnockOutService;
+use Drupal\Core\Asset\AttachedAssetsInterface;
+
+/**
+ * Implements hook_help().
+ */
+function cookies_ga_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the cookies_ga module.
+    case 'help.page.cookies_ga':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Submodule of cookies to manage Google Analytics implemented by so named module.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function cookies_ga_page_attachments(array &$attachments) {
+  $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+  $attach_cookies_ga_lib = FALSE;
+  if ($doKo && !empty($attachments["#attached"]["html_head"])) {
+    foreach ($attachments["#attached"]["html_head"] as $key => $head_tag) {
+      $scripts = [
+        'google_analytics_tracking_script',
+        'google_analytics_tracking_file',
+      ];
+      foreach ($scripts as $script) {
+        if (in_array($script, $head_tag)) {
+          $attr = (isset($head_tag[0]['#attributes'])) ? $head_tag[0]['#attributes'] : [];
+          $attr = array_merge(
+            $attr,
+            ['type' => 'text/plain', 'id' => "cookies_{$script}"]
+          );
+          $attachments["#attached"]["html_head"][$key][0]['#attributes'] = new Attribute($attr);
+          $attach_cookies_ga_lib = TRUE;
+          break;
+        }
+      }
+    }
+  }
+  if ($attach_cookies_ga_lib || (!empty($attachments["#attached"]["library"]) && in_array('ga/analytics', $attachments["#attached"]["library"]))) {
+    $attachments["#attached"]["library"][] = 'cookies_ga/analytics';
+  }
+}
+
+/**
+ * Implements hook_js_alter().
+ *
+ * Remove Twitter JS library. Will be added in js/cookies_twitter_media.js.
+ */
+function cookies_ga_js_alter(&$javascript, AttachedAssetsInterface $assets) {
+  $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+  $moduleHandler = \Drupal::service('module_handler');
+  if ($moduleHandler->moduleExists('ga')) {
+    $module_path = \Drupal::service('extension.list.module')->getPathname('ga');
+    if ($doKo && $module_path) {
+      $scripts = [
+        "{$module_path}/js/analytics.js",
+        "https://www.google-analytics.com/analytics.js",
+      ];
+      foreach ($scripts as $key => $script) {
+        if (isset($javascript[$script])) {
+          $javascript[$script]['attributes']['type'] = 'text/plain';
+          $javascript[$script]['attributes']['id'] = 'cookies_ga_' . $key;
+        }
+      }
+    }
+  }
+}

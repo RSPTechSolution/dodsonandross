@@ -1,0 +1,10 @@
+{% set attributes = attributes.addClass('viewsreference--view-title') %}
+{% if 'authenticated' in user.getroles or 'anonymous' in user.getroles%}
+  {% set attributes = attributes.addClass('role-hidden') %}
+{% endif %}
+{% if 'administrator' in user.getroles  %}
+  {% set attributes = attributes.addClass('role-hidden') %}
+{% endif %}
+<div{{ attributes }}>
+    {{ title }}
+</div>

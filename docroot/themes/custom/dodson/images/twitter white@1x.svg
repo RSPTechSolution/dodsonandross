@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="21px" height="17px" viewBox="0 0 21 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>twitter white@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M22,5.91666667 C21.25,6.25 20.5,6.5 19.6666667,6.58333333 C20.5,6.08333333 21.1666667,5.25 21.5,4.33333333 C20.6666667,4.83333333 19.8333333,5.16666667 18.9166667,5.33333333 C18.1666667,4.5 17.0833333,4 15.9166667,4 C13.6666667,4 11.8333333,5.83333333 11.8333333,8.08333333 C11.8333333,8.41666667 11.8333333,8.75 11.9166667,9 C8.41666667,8.83333333 5.41666667,7.16666667 3.41666667,4.66666667 C3,5.33333333 2.83333333,6 2.83333333,6.75 C2.83333333,8.16666667 3.58333333,9.41666667 4.66666667,10.1666667 C4,10.1666667 3.33333333,10 2.83333333,9.66666667 C2.83333333,9.66666667 2.83333333,9.66666667 2.83333333,9.75 C2.83333333,11.75 4.25,13.4166667 6.08333333,13.75 C5.75,13.8333333 5.41666667,13.9166667 5,13.9166667 C4.75,13.9166667 4.5,13.9166667 4.25,13.8333333 C4.75,15.5 6.25,16.6666667 8.08333333,16.6666667 C6.66666667,17.75 4.91666667,18.4166667 3,18.4166667 C2.66666667,18.4166667 2.33333333,18.4166667 2,18.3333333 C3.83333333,19.5 6,20.1666667 8.25,20.1666667 C15.8333333,20.1666667 19.9166667,13.9166667 19.9166667,8.5 L19.9166667,8 C20.75,7.41666667 21.4166667,6.66666667 22,5.91666667 Z" id="path-1"></path>
+    </defs>
+    <g id="D&amp;R-Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Guide----General" transform="translate(-794.000000, -1275.000000)">
+            <g id="Group-4" transform="translate(703.000000, 1053.500000)">
+                <g id="Group" transform="translate(0.448936, 132.803320)">
+                    <g id="uxpower/Icon/App/Twitter" transform="translate(88.873824, 85.185963)">
+                        <rect id="Bounding-Box" x="0" y="0" width="24" height="24"></rect>
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Mask" fill="#1DA1F2" fill-rule="evenodd" xlink:href="#path-1"></use>
+                        <g id="uxpower/Mixin/Fill/White" mask="url(#mask-2)" fill-rule="evenodd" fill="#FFFFFF">
+                            <rect id="Box" x="0" y="0" width="24" height="24"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,8 @@
+name: 'AdvAgg Modifier'
+description: 'Allows one to alter the CSS and JS array.'
+package: 'Advanced CSS/JS Aggregation'
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - advagg:advagg
+type: module
+configure: advagg_mod.settings

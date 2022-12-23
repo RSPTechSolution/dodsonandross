@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Installation information for the 'Cookies Google Analytics' module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function cookies_ga_install() {
+  // Load cookies_ga module after the third-party library.
+  module_set_weight('cookies_ga', 11);
+}
+
+/**
+ * Update service config to enforce module dependency 'cookies_ga'.
+ */
+function cookies_ga_update_8001() {
+  $config = \Drupal::configFactory()
+    ->getEditable('cookies.cookies_service.analytics');
+  if (!$config->isNew()) {
+    $dependencies = $config->get('dependencies');
+    $dependencies['enforced']['module'][] = 'cookies_ga';
+    $config->set('dependencies', $dependencies)->save(TRUE);
+  }
+}

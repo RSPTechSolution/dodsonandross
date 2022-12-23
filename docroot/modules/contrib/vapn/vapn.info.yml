@@ -1,0 +1,12 @@
+name: 'VAPN'
+type: module
+description: 'View Permissions Per Node'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Custom'
+configure: vapn.vapn_config_form
+
+# Information added by Drupal.org packaging script on 2020-08-24
+version: '8.x-1.5'
+project: 'vapn'
+datestamp: 1598281776

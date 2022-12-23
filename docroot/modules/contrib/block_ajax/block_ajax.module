@@ -1,0 +1,147 @@
+<?php
+
+/**
+ * @file
+ * Contains block_ajax.module.
+ */
+
+use Drupal\block_ajax\Form\AjaxBlockForm;
+use Drupal\block_ajax\AjaxBlockListBuilder;
+use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function block_ajax_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name == 'help.page.block_ajax') {
+    $text = file_get_contents(__DIR__ . '/README.md');
+    if (!Drupal::moduleHandler()->moduleExists('markdown')) {
+      return '<pre>' . $text . '</pre>';
+    }
+    else {
+      /** @var \Drupal\markdown\PluginManager\ParserManagerInterface $parser_manager */
+      $parser_manager = \Drupal::service('plugin.manager.markdown.parser');
+      $parser = $parser_manager->getDefaultParser([
+        'render_strategy' => ['type' => 'none'],
+      ]);
+      return $parser->parse($text);
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Implements hook_preprocess_block().
+ */
+function block_ajax_preprocess_block(&$variables) {
+  if (!empty($variables['elements']['#configuration']['block_ajax']['is_ajax'])) {
+  }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function block_ajax_entity_type_alter(array &$entity_types) {
+  if (!empty($entity_types['block'])) {
+    /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+    $entity_types['block']->setFormClass('default', AjaxBlockForm::class);
+    $entity_types['block']->setListBuilderClass(AjaxBlockListBuilder::class);
+  }
+}
+
+/**
+ * Implements hook_block_build_alter().
+ */
+function block_ajax_block_build_alter(array &$build, BlockPluginInterface $block) {
+  /** @var \Drupal\block_ajax\AjaxBlocks $ajaxBlocksService */
+  $ajaxBlocksService = \Drupal::service('block_ajax.ajax_blocks');
+  if ($ajaxBlocksService->isAjaxBlock($block)) {
+    // Prevent Drupal from caching AJAX block by default.
+    $max_age = 0;
+    if (!empty($block->getConfiguration()['block_ajax']['max_age'])) {
+      $max_age = (int) $block->getConfiguration()['block_ajax']['max_age'];
+    }
+    // Set max age.
+    $build['#cache']['max-age'] = $max_age;
+
+    // Add custom cache tag to identify this block.
+    $build['#cache']['tags'][] = 'block_ajax';
+  }
+}
+
+/**
+ * Implements hook_block_view_alter().
+ */
+function block_ajax_block_view_alter(array &$build, BlockPluginInterface $block) {
+  /** @var \Drupal\block_ajax\AjaxBlocks $ajaxBlocksService */
+  $ajaxBlocksService = \Drupal::service('block_ajax.ajax_blocks');
+  if ($ajaxBlocksService->isAjaxBlock($block)) {
+    // Get block configuration.
+    $blockConfig = $block->getConfiguration();
+
+    // Pre-render block.
+    $build['#pre_render'] = [
+      function ($build) use ($ajaxBlocksService, $blockConfig) {
+        // Make sure we have block and id exists.
+        if (isset($build['#block']) && $blockId = $build['#block']->id()) {
+          // Remove the block entity from the render array, to ensure that
+          // blocks can be rendered without the block config entity.
+          unset($build['#block']);
+
+          // Add block configuration.
+          $build['#block_settings'] = $blockConfig;
+
+          // Add contextual links.
+          if ($ajaxBlocksService->hasAccess('access contextual links') && !empty($build['#contextual_links'])) {
+            $build['#block_ajax_contextual_links'] = [
+              '#type' => 'contextual_links_placeholder',
+              '#id' => _contextual_links_to_id($build['#contextual_links']),
+            ];
+          }
+
+          // Set theme/template for Ajax block.
+          $build['#theme'] = 'block_ajax_block';
+
+          // Add in block id.
+          $build['#block_ajax_id'] = $blockId;
+
+          $ajaxDefaults = $blockConfig['block_ajax']['ajax_defaults'] ?? [];
+          // Add ajax block settings if Ajax block.
+          $build['#attached']['library'][] = 'block_ajax/ajax_blocks';
+          $build['#attached']['drupalSettings']['block_ajax']['config'] =
+            $ajaxBlocksService->getAjaxDefaults($ajaxDefaults);
+          $build['#attached']['drupalSettings']['block_ajax']['blocks'][$blockId] = $blockConfig;
+
+          // Set current node.
+          $build['#attached']['drupalSettings']['block_ajax']['blocks'][$blockId]['current_node'] = $ajaxBlocksService->getCurrentNodeId();
+
+          // Set current user.
+          $build['#attached']['drupalSettings']['block_ajax']['blocks'][$blockId]['current_user'] = $ajaxBlocksService->getCurrentUserId();
+
+          // Set current taxonomy term.
+          $build['#attached']['drupalSettings']['block_ajax']['blocks'][$blockId]['current_term'] = $ajaxBlocksService->getCurrentTaxonomyTermId();
+        }
+
+        // Return pre-render array.
+        return $build;
+      },
+    ];
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function block_ajax_theme(): array {
+  return [
+    'block_ajax_block' => [
+      'file' => 'block_ajax.theme.inc',
+      'variables' => [
+        'block_ajax_contextual_links' => NULL,
+        'block_ajax_id' => NULL,
+        'block_settings' => NULL,
+      ],
+    ],
+  ];
+}

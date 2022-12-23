@@ -1,0 +1,8 @@
+.copysubmitbuttons {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+.copysubmitbuttons .form-submit {
+  float: left;
+}

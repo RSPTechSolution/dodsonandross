@@ -1,0 +1,12 @@
+entity.commerce_license.canonical:
+  title: View
+  route_name: entity.commerce_license.canonical
+  base_route: entity.commerce_license.canonical
+entity.commerce_license.edit_form:
+  title: Edit
+  route_name: entity.commerce_license.edit_form
+  base_route: entity.commerce_license.canonical
+entity.commerce_license.delete_form:
+  title: Delete
+  route_name: entity.commerce_license.delete_form
+  base_route: entity.commerce_license.canonical

@@ -1,0 +1,4 @@
+administer ajax blocks:
+  title: 'Administer Ajax Blocks'
+  description: 'Administer Ajax settings on the block.'
+  restrict access: true

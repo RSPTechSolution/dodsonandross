@@ -1,0 +1,36 @@
+/*--
+ * Mixins
+ * Define here all the mixins from the project
+-*/
+
+@mixin respond-to($val, $val2: none) {
+    @if ($val2 == none) {
+    	@media (min-width: $val) { @content; }
+
+    } @else if ($val2 == max) {
+    	@media (max-width: $val) { @content; }
+
+    } @else {
+    	@media (min-width: $val) and (max-width: $val2) { @content; }
+    }
+}
+
+@mixin button(){
+  color: #A03C4A;
+  padding: 10px 30px;
+  border-radius: 50px;
+  display: inline-block;
+  background: transparent;
+  box-sizing: border-box;
+  font-weight: 700;
+  transition: 0.3s all;
+  border: 1px solid #A03C4A;
+  &:hover {
+    background: #A03C4A;
+    color:#fff;
+  }
+
+  svg {
+    display:none;
+  }
+}  

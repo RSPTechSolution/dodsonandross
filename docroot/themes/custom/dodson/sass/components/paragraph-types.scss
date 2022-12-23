@@ -1,0 +1,158 @@
+/**
+ * Include here only generic global paragraph type styles
+ */
+
+.paragraph--type--card{
+  > .field--name-field-card-section{
+    width: 97%;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+
+  &.transparent {
+    background: transparent;
+  }
+  &.white {
+    background: $white;
+  }
+  &.gray {
+    background: $secondary;
+  }
+  &.purple {
+    background: $purple;
+  }
+}
+.paragraph--type--video{
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 25px;
+  height: 0;
+  overflow: hidden;
+  max-width: 995px;
+  margin: 0 auto;
+  iframe {
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.paragraph--type--atom-iframe {
+  iframe{
+    height: 500px;
+    width: 100%;
+  }
+}
+
+.paragraph--type--title{
+  font-size: 16px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  color: $brightPurple;
+}
+.paragraph--type--text{
+  margin-bottom: 5px;
+  font-size: 14px;
+  line-height: 20px;
+}
+.paragraph--type--link{
+  font-size: 15px;
+}
+
+.paragraph--type--atom-button{
+  margin: 20px 0 0  ;
+  text-align: center;
+  a{
+    @include button();
+  }
+  &.square a{
+    
+  }
+}
+
+.paragraph--type--image{
+  margin: 0 auto;
+  img{
+    width: 100%;
+    height: auto;
+  }
+}
+
+.paragraph--type--atom-quote {
+  opacity: 0.7;
+  margin: 40px 0;
+  display: flex;
+  font-size: 14px;
+  color: #4A4A4A;
+  font-style: italic;
+  position: relative;
+  justify-content: center;
+
+  .field--name-field-atom-quote-text {
+    width: 70%;
+  }
+  &:before, &:after {
+    font-size: 30px;
+    color: $black;
+    position: absolute;
+  }
+  &:before {
+    content: open-quote;
+    top: -15px;
+    left: 45px;
+  }
+  &:after {
+    content: close-quote;
+    bottom: -15px;
+    right: 45px;
+  }
+}
+@include respond-to($tablet){
+  .paragraph--type--card{
+    > .field--name-field-card-section{
+      overflow: visible;
+    }
+  }
+  .paragraph--type--card{
+    > .field--name-field-card-section{
+      width: 100%;
+      margin: 0 auto;
+      max-width: 622px;
+    }
+  }
+  .paragraph--type--title{
+    font-size: 18px;
+  }
+  .paragraph--type--columns {
+    .field--name-field-columns {
+      display: flex;
+      .paragraph--type--column:first-child{
+        width: auto;
+      }
+      .paragraph--type--column:last-child{
+        width: auto;
+      }
+    }
+  }
+}
+@include respond-to($desktop){
+  .paragraph--type--card{
+    max-width: 100%;
+    // padding: 100px 0;
+    > .field--name-field-card-section{
+      // width: calc(100% - 32px);
+      max-width: 1150px;
+      margin: 0 auto;
+    }
+    .paragraph--type--card{
+      width: 100%;
+    }
+  }
+
+}
+
+@include respond-to($widescreen){
+
+}

@@ -1,0 +1,4 @@
+bypass license control:
+  title: 'Bypass license control'
+  description: 'Download files without having a license.'
+  restrict access: true

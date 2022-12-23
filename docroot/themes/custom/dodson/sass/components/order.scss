@@ -1,0 +1,38 @@
+.view-commerce-user-orders .views-row {
+  display: flex;
+}
+
+.view-commerce-user-orders .views-row .views-label {
+  font-weight: bold;
+  min-height: 47px;
+  display: block;
+}
+
+.view-commerce-user-orders .views-row {
+  margin-bottom: 50px;
+}
+
+.view-commerce-user-orders .views-row .views-field {
+  padding: 0 10px;
+  min-width: 125px;
+}
+
+.view-commerce-user-orders .views-field-state .field-content,
+.view-commerce-user-orders .views-field-price__number .field-content,
+.view-commerce-user-orders .views-field-placed .field-content,
+.view-commerce-user-orders .views-field-title .field-content,
+.view-commerce-user-orders p {
+  font-size: 13px;
+}
+
+@media(max-width: 1199px) {
+  .view-commerce-user-orders .views-row .views-field {  
+    min-width: 96px;
+  }
+}
+@media(max-width: 767px) {
+  .view-commerce-user-orders .views-row {  
+    width: 100%;
+    overflow: scroll;
+  }
+}

@@ -1,0 +1,8 @@
+name: 'AdvAgg Bundler'
+description: 'Customize the number of aggregates to be created.'
+package: 'Advanced CSS/JS Aggregation'
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - advagg:advagg
+type: module
+configure: advagg_bundler.settings

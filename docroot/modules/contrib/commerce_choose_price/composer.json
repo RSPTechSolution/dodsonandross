@@ -1,0 +1,16 @@
+{
+  "name": "drupal/commerce_choose_price",
+  "type": "drupal-module",
+  "description": "Allow your customers to set their own price for a product.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/commerce_choose_price",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/commerce_choose_price",
+    "source": "http://cgit.drupalcode.org/commerce_choose_price"
+  },
+  "require": {
+    "drupal/commerce": "~2.0"
+  }
+}

@@ -1,0 +1,10 @@
+name: 'Field Hidden'
+description: 'Defines hidden element widgets for number and (plain)text field types.'
+package: Fields
+core_version_requirement: ^8 || ^9
+type: module
+
+# Information added by Drupal.org packaging script on 2020-08-25
+version: '2.0.0'
+project: 'field_hidden'
+datestamp: 1598344373

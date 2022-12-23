@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="19px" height="19px" viewBox="0 0 19 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>User- white@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M12,3 C7.03725,3 3,7.03725 3,12 C3,16.96275 7.03725,21 12,21 C16.96275,21 21,16.96275 21,12 C21,7.03725 16.96275,3 12,3 Z M17.0235,17.553 C16.5255,16.07325 15.1485,15 13.5,15 L10.5,15 C8.8515,15 7.476,16.074 6.978,17.55375 C5.46075,16.1805 4.5,14.20275 4.5,12 C4.5,7.8645 7.8645,4.5 12,4.5 C16.1355,4.5 19.5,7.8645 19.5,12 C19.5,14.202 18.54,16.17975 17.0235,17.553 Z M12,6.75 C10.34325,6.75 9,8.09325 9,9.75 L9,10.5 C9,12.15675 10.34325,13.5 12,13.5 C13.65675,13.5 15,12.15675 15,10.5 L15,9.75 C15,8.09325 13.65675,6.75 12,6.75 Z" id="path-1"></path>
+    </defs>
+    <g id="D&amp;R-Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Guide----General" transform="translate(-842.000000, -1231.000000)">
+            <g id="Group-4" transform="translate(703.000000, 1053.500000)">
+                <g id="Group" transform="translate(0.448936, 132.803320)">
+                    <g id="uxpower/Icon/User" transform="translate(136.000000, 42.225883)">
+                        <rect id="Bounding-Box" x="0" y="0" width="24" height="24"></rect>
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Mask" fill-rule="nonzero"></g>
+                        <g id="uxpower/Mixin/Fill/White" mask="url(#mask-2)" fill-rule="evenodd" fill="#FFFFFF">
+                            <rect id="Box" x="0" y="0" width="24" height="24"></rect>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

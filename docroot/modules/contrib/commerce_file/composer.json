@@ -1,0 +1,16 @@
+{
+    "name": "drupal/commerce_file",
+    "type": "drupal-module",
+    "description": "Provides the ability to sell access to files.",
+    "homepage": "https://drupal.org/project/commerce_file",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^9.3 || ^10",
+        "drupal/commerce_license": "^2.0-alpha20"
+    },
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/commerce_file",
+        "source": "https://cgit.drupalcode.org/commerce_file"
+    },
+    "minimum-stability": "dev"
+}

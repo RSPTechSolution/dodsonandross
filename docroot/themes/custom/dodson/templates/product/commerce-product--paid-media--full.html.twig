@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ *
+ * Default product template.
+ *
+ * Available variables:
+ * - attributes: HTML attributes for the wrapper.
+ * - product: The rendered product fields.
+ *   Use 'product' to print them all, or print a subset such as
+ *   'product.title'. Use the following code to exclude the
+ *   printing of a given field:
+ *   @code
+ *   {{ product|without('title') }}
+ *   @endcode
+ * - product_entity: The product entity.
+ * - product_url: The product URL.
+ *
+ * @ingroup themeable
+ */
+#}
+
+
+<div class="paid-gallery-detail">
+	{{ drupal_view('premium_product_image', 'block_1',product_entity.id) }}
+
+	<div {{ attributes.addClass('advertice-product') }}>
+	      <h3>{{ product.title }}</h3>
+	      	
+
+	        {% if product_entity.body.value is not empty %}
+	           <div class="mainproduct-details-content">
+	            {{ product_entity.body.value|raw }}
+	           </div>  
+	        {% endif %}
+
+	        <div class="sku-block">
+	        	PillowTalk | 2020	
+	        </div> 
+	        <div class="cart-wrap">
+	         <div class="product-advertice-price">
+
+	      	 {{ product.variation_price }}
+	      </div>
+	      {{ product.variations }}
+	      </div>
+	</div>
+</div>
+
+
+        

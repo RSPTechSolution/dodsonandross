@@ -1,0 +1,18 @@
+dodson_license_update:
+  path: '/admin/dodson-license-update'
+  defaults:
+    _form: '\Drupal\dodson_license_update\Form\UpdateLicense'
+    _title: 'Update License'
+  requirements:
+    _permission: 'Import form'
+    _role: 'administrator'
+    # _access: 'TRUE'
+dodson_license_update.testing:
+  path: '/testing'
+  defaults:
+    _controller: '\Drupal\dodson_license_update\Controller\Testing::index'
+  requirements:
+    _access: 'TRUE'
+    _permission: 'access content'
+  options:
+    no_cache: TRUE

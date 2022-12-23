@@ -1,0 +1,16 @@
+{
+    "name": "drupal/cookies",
+    "type": "drupal-module",
+    "description": "Cookie consent tool.",
+    "keywords": [
+    ],
+    "homepage": "https://www.drupal.org/project/cookies",
+    "minimum-stability": "dev",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/cookies",
+        "source": "http://cgit.drupalcode.org/cookies"
+    },
+    "require": {
+        "jfeltkamp/cookiesjsr": "^1.0.12"
+    }
+}

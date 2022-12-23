@@ -1,0 +1,11 @@
+name: Web socket
+type: module
+description: Real-time Drupal with web socket
+# core: 8.x
+package: Web socket
+
+# Information added by Drupal.org packaging script on 2018-07-01
+version: '9.x'
+core_version_requirement: ^8.8 || ^9
+# project: 'websocket'
+# datestamp: 1530434326

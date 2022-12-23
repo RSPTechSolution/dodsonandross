@@ -1,0 +1,101 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce
+    - commerce_license
+    - file
+    - state_machine
+id: commerce_license.commerce_file.default
+targetEntityType: commerce_license
+bundle: commerce_file
+mode: default
+content:
+  created:
+    type: timestamp
+    label: inline
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  expiration_type:
+    type: commerce_plugin_item_default
+    label: inline
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  expires:
+    type: commerce_license_expiration
+    label: inline
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  granted:
+    type: timestamp
+    label: inline
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  licensed_files:
+    type: file_default
+    label: above
+    settings:
+      use_description_as_link_text: true
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  originating_order:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  product_variation:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  renewed:
+    type: timestamp
+    label: inline
+    settings:
+      date_format: short
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  state:
+    type: state_transition_form
+    label: hidden
+    settings:
+      require_confirmation: false
+      use_modal: false
+    third_party_settings: {  }
+    weight: 9
+    region: content
+  uid:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 3
+    region: content

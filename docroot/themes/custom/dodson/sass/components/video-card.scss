@@ -1,0 +1,37 @@
+.paragraph--type--card {
+
+  &.video-card {
+
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+
+    .paragraph--type--title {
+      font-size: 16px;
+    }
+
+    @include respond-to($tablet){
+
+      .paragraph--type--title,
+      .paragraph--type--text,
+      .paragraph--type--link{
+        padding: 0 16px;
+      }
+    }
+
+    @include respond-to($desktop){
+
+      .paragraph--type--text{
+        max-width: 550px;
+        display: inline-block;
+      }
+
+      .paragraph--type--video{
+        iframe {
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+
+  }
+}

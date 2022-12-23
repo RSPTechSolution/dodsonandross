@@ -1,0 +1,20 @@
+
+{%
+  set classes = ['cookies-docs-service']
+%}
+<article{{ attributes.addClass(classes) }}>
+  <h4>{{ label }}</h4>
+  {% if external_link_url %}
+    <div class="cookies-docs-service--website">
+      <a href="{{ external_link_url }}" target="_blank" rel="nofollow noreferrer" class="cookies-docs-service--official">{{ external_link_text }}</a>
+    </div>
+  {% endif %}
+  <div class="cookies-docs-service--info">
+    {{ content }}
+  </div>
+  {% if edit_link_url %}
+    <div class="cookies-docs-service--edit-link">
+      <a href="{{ edit_link_url }}" class="cookies-docs-service--edit-link">{{ edit_link_text }}</a>
+    </div>
+  {% endif %}
+</article>

@@ -1,0 +1,22 @@
+migrate.source.d6_d7_acl_table:
+  type: migrate_source_sql
+  label: 'Drupal 6/7 ACL table'
+  mapping:
+    table_name:
+      type: string
+      label: 'Table name'
+    fields_list:
+      type: sequence
+      label: 'Fields list'
+      sequence:
+        type: string
+        label: 'Field name'
+    ids:
+      type: sequence
+      label: 'Primary key'
+      sequence:
+        type: sequence
+        label: 'ID parameter name'
+        sequence:
+          type: string
+          label: 'ID parameter value'

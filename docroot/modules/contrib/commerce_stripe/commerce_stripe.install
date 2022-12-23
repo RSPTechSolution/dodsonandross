@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Commerce Stripe.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function commerce_stripe_requirements($phase) {
+  $requirements = [];
+  if ($phase == 'install') {
+    if (!class_exists('\Stripe\Stripe')) {
+      $requirements['commerce_stripe_library'] = [
+        'description' => t('Commerce Stripe requires the stripe/stripe-php library.'),
+        'severity' => REQUIREMENT_ERROR,
+      ];
+    }
+  }
+
+  return $requirements;
+}

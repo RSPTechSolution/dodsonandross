@@ -1,0 +1,13 @@
+name: Modules Weight
+description: Allows to change the modules execution order.
+package: Development
+
+type: module
+core_version_requirement: ^8.7.7 || ^9.0
+
+configure: modules_weight.modules_weight_admin_settings
+
+# Information added by Drupal.org packaging script on 2021-02-16
+version: '8.x-1.9'
+project: 'modules_weight'
+datestamp: 1613514270

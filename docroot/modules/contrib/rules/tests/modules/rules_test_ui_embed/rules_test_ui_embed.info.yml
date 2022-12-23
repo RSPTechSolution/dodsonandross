@@ -1,0 +1,6 @@
+name: Rules UI embedding test
+type: module
+description: 'A module testing embedding the Rules UI.'
+package: Testing
+dependencies:
+  - rules:rules

@@ -1,0 +1,12 @@
+services:
+  block_ajax.ajax_blocks:
+    class: Drupal\block_ajax\AjaxBlocks
+    arguments: [ '@config.factory', '@current_user', '@cache_tags.invalidator', '@date.formatter', '@plugin.manager.block', '@renderer', '@entity_type.manager', '@block_ajax.block_view_builder', '@current_route_match' ]
+  block_ajax.block_view_builder:
+    class: Drupal\block_ajax\BlockViewBuilder
+    arguments: [ '@plugin.manager.block', '@context.repository', '@context.handler', '@current_user', '@request_stack', '@current_route_match', '@title_resolver' ]
+  block_ajax.route_subscriber:
+    class: Drupal\block_ajax\Routing\AjaxBlockRouteSubscriber
+    arguments: [ ]
+    tags:
+      - { name: event_subscriber }

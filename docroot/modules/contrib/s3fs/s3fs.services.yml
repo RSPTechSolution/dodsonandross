@@ -1,0 +1,38 @@
+services:
+  s3fs:
+    class: Drupal\s3fs\S3fsService
+    arguments: ['@database', '@config.factory', '@datetime.time', '@module_handler']
+  stream_wrapper.s3fs:
+    class: Drupal\s3fs\StreamWrapper\S3fsStream
+    tags:
+      - { name: stream_wrapper, scheme: s3 }
+  s3fs.path_processor.image_styles:
+    class: Drupal\s3fs\PathProcessor\S3fsPathProcessorImageStyles
+    tags:
+      - { name: path_processor_inbound, priority: 310 }
+  s3fs.file_migration_batch:
+    class: Drupal\s3fs\Batch\S3fsFileMigrationBatch
+  s3fs.refresh_cache_batch:
+    class: Drupal\s3fs\Batch\S3fsRefreshCacheBatch
+
+  s3fsfileservice:
+    class: Drupal\s3fs\S3fsFileService
+    decorates: file_system
+    decoration_priority: 5
+    arguments: ['@s3fsfileservice.inner', '@stream_wrapper_manager', '@logger.channel.file', '@s3fs', '@config.factory', '@module_handler', '@s3fs.mime_type.guesser']
+
+  s3fs.mime_type.guesser:
+    class: Drupal\Core\File\MimeType\MimeTypeGuesser
+    arguments: [ '@stream_wrapper_manager' ]
+    lazy: true
+  s3fs.mime_type.guesser.extension:
+    class: Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser
+    arguments: [ '@module_handler' ]
+    tags:
+      - { name: s3fs_mime_type_guesser }
+    lazy: true
+
+  s3fs.route_subscriber_core_image_style:
+    class: Drupal\s3fs\Routing\S3fsAlterCoreImageStyleRoutesSubscriber
+    tags:
+      - { name: event_subscriber }

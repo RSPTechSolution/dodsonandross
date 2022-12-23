@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - cookies_gtag
+id: gtag
+label: 'Google Tag Manager'
+group: performance
+info:
+  format: 'full_html'
+  value: ''
+url: 'https://policies.google.com/privacy'
+consent: true

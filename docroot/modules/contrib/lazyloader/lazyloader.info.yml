@@ -1,0 +1,13 @@
+name: 'Image Lazyloader'
+package: Lazyloader
+description: 'Automatically lazyload images on windows scroll, makes sites with multiple images load faster.'
+core_version_requirement: ^8 || ^9
+dependencies:
+  - drupal:image
+type: module
+configure: 'lazyloader.admin_configure'
+
+# Information added by Drupal.org packaging script on 2021-07-19
+version: '8.x-1.0-alpha4'
+project: 'lazyloader'
+datestamp: 1626681048

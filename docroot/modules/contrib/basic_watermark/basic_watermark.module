@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains basic_watermark.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function basic_watermark_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the basic_watermark module.
+    case 'help.page.basic_watermark':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Applies watermark on uploaded images') . '</p>';
+      return $output;
+
+    default:
+  }
+}

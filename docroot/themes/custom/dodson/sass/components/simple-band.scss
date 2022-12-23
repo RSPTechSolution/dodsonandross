@@ -1,0 +1,76 @@
+
+/**
+ * Simple band specific styles
+ */
+
+.paragraph--type--card{
+
+  &.simple-band{
+    > .field--name-field-card-section{
+      max-width: 944px;
+      text-align: center;
+      padding-top: 55px;
+      padding-bottom: 35px;
+      @media (max-width:767px) {
+          padding-top: 40px;
+      }
+    }
+
+    .paragraph--type--title{
+      margin-top: 0;
+    }
+
+    .field--name-field-title{
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #4A4A4A;
+    }
+
+    .field--name-field-text{
+      width: 95%;
+      opacity: 0.5;
+      margin: 0 auto;
+      font-size: 14px;
+      line-height: 1.7;
+      color: #4A4A4A;
+    }
+
+    @include respond-to($tablet){
+      .field--name-field-title{
+        font-size: 28px;
+      }
+      .field--name-field-text{
+        font-size: 18px;
+      }
+    }
+
+    @include respond-to($desktop){
+
+      .field--name-field-title{
+        font-size: 38px;
+      }
+
+      .field--name-field-text{
+        width: 59%;
+      }
+    }
+  }
+}
+//Styles for node pages
+.page__node{
+  .paragraph--type--card.simple-band .field--name-field-title{
+    text-align: center;
+    color: #929292;
+    border-bottom: 2px solid #dfdfdf;
+    padding-bottom: 10px;
+    margin-bottom: 0;
+    font-size: 22px;
+    @include respond-to($tablet){
+      font-size: 28px;
+    }
+  }
+  .paragraph--type--card.simple-band > .field--name-field-card-section{
+    padding-bottom: 25px;
+    margin-left: 0;
+  }
+}

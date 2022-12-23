@@ -1,0 +1,11 @@
+entity.commerce_license.collection:
+  title: 'Licenses'
+  route_name: 'entity.commerce_license.collection'
+  parent: 'commerce.admin_commerce'
+  description: 'Manage your licenses.'
+
+entity.commerce_license.license_types:
+  title: 'License types'
+  route_name: 'entity.commerce_license.license_types'
+  parent: 'commerce.configuration'
+  description: 'Manage fields, form and display settings for your licenses.'

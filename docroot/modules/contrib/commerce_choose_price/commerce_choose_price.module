@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_choose_price.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_choose_price_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_choose_price module.
+    case 'help.page.commerce_choose_price':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Allow your customers to set their own price for a product.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

@@ -1,0 +1,22 @@
+
+.paragraph--type--card {
+
+  &.video-card-with-item-list {
+
+    .paragraph--type--columns .field--name-field-columns{
+      display: block;
+    }
+
+    @include respond-to($tablet){
+
+
+    }
+
+    @include respond-to($desktop){
+      .paragraph--type--columns .field--name-field-columns{
+        display: flex;
+      }
+    }
+
+  }
+}

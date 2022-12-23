@@ -1,0 +1,193 @@
+/**
+* Footer styles
+*/
+
+footer{
+  font-family: 'Merriweather', serif;
+  color: #4A4A4A;
+  overflow: hidden;
+  .region-footer{
+    nav{
+      display: none;
+      .menu{
+        li{
+          a{
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    #block-stickyfooter{
+      display: flex;
+      flex-direction: column;
+      margin: 12px 0 0 0;
+      .footer-sign-up-section{
+        /*order: 2;
+        display: flex;
+        justify-content: space-between;
+        background: #fbfbfb;
+        padding: 12px 1.5%;
+        margin: 0 auto;
+        width: 100%;*/
+        .field--name-field-sign-up-button-text{
+          display: none;
+        }
+        .clear{
+          width: 30%;
+          padding: 10px 5px;
+        }
+        .btn{
+          padding: 10px;
+          width: 100%;
+        }
+        #mc_embed_signup{
+          width: 100%;
+          @include respond-to($desktop){
+            width: 85%;
+          }
+        }
+        
+        #mc_embed_signup_scroll{
+          display: flex;
+            .mc-field-group{
+              width: 65%;
+            }
+            .textfield{
+              width: 100%;
+              padding: 11px 25px;
+              margin-top: 10px;
+              height: auto;
+            }
+            #mce-responses{
+              margin-top: 55px;
+              position: absolute;
+              width: auto;
+            }
+            div.mce_inline_error{
+              display: none !important;
+            }
+        }
+      }
+      .field--name-field-social-links{
+        display: flex;
+        justify-content: space-between;
+        .paragraph--type--atom-image-link{
+            width: 25px;
+            img{
+              width: 100%;
+              border-radius: 50%;
+            }
+          }
+      }
+
+      @media (max-width:767px) {
+          padding: 0 15px;
+      }
+    }
+
+    #block-stickyfooter .field--name-field-social-links .field__item:first-child {
+      color: #fff;
+      font-size: 16px;
+      font-family: 'Montserrat';
+
+      @media (max-width:767px) {
+        font-size: 14px;
+      }
+    }
+
+    @include respond-to($tablet){
+      background: #fbfbfb;
+      #block-stickyfooter{
+        flex-direction: row;
+        justify-content: space-between;
+        .footer-sign-up-section{
+          order: 1;
+          width: 60%;
+          .field--name-field-sign-up-button-text{
+            width: 15%;
+            display: flex;
+            align-items: center;
+          }
+          .clear{
+            width: 30%;
+          }
+          .mc-field-group{
+            width: 50%;
+          }
+        }
+        .field--name-field-social-links{
+          order: 2;
+          width: 40%;
+          .field__item {
+            &:first-child {
+              display: flex;
+              align-items: center;
+            }
+          }
+          .paragraph--type--text{
+            margin: 0;
+          }
+
+          .paragraph--type--atom-image-link {
+            padding: 0 30px;
+            img{
+              width: 34px;
+              height: 34px;
+            }
+          }
+        }
+
+      }
+    }
+
+    @include respond-to($desktop){
+      nav{
+        display: block;
+        padding: 25px 0;
+        background: $purple-secondary;
+        .menu{
+          display: flex;
+          margin: 0 auto;
+          max-width: 800px;
+          justify-content: space-between;
+          li{
+            cursor: pointer;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: $purple-secondary;
+            transition: background-color 0.5s ease;
+            a{
+              display: block;
+              color: #FFF;
+            }
+            &:hover {
+              background-color: $brightPurple;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .footer__legal{
+    text-align: left;
+    font-size: 16px;
+    color: #fff;
+    font-family: 'Montserrat';
+    line-height: 24px;
+    max-width: 70%;
+    @media (max-width:767px) {
+      max-width: 100%;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+  }
+  @include respond-to($tablet){
+    width: 100%;
+    padding-top: 75px;
+  }
+  @include respond-to($desktop){
+    padding-top: 40px;
+  }
+}

@@ -1,0 +1,77 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for Commerce File module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function commerce_file_schema() {
+  // Provides a temporary download log, used for setting download limits.
+  // Not meant to be user viewable.
+  $schema['commerce_file_download_log'] = [
+    'fields' => [
+      'log_id' => [
+        'description' => 'The primary key.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'license_id' => [
+        'description' => 'The {commerce_license}.license_id of the downloaded file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'fid' => [
+        'description' => 'The {file_managed}.fid of the downloaded file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'description' => 'The {users}.uid of the user that downloaded the file.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'timestamp' => [
+        'description' => 'The UNIX timestamp of the date the file was downloaded.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'ip_address' => [
+        'description' => 'The IP address of the user that downloaded the file.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['log_id'],
+    'indexes' => [
+      'license_id' => ['license_id'],
+      'fid' => ['fid'],
+      'uid' => ['uid'],
+    ],
+    'foreign keys' => [
+      'licenses' => [
+        'table' => 'commerce_license',
+        'columns' => ['license_id' => 'license_id'],
+      ],
+      'file_managed' => [
+        'table' => 'file_managed',
+        'columns' => ['fid' => 'fid'],
+      ],
+      'users' => [
+        'table' => 'users',
+        'columns' => ['uid' => 'uid'],
+      ],
+    ],
+  ];
+  return $schema;
+}

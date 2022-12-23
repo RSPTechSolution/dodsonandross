@@ -1,0 +1,6 @@
+name: Dodson Custom licence update
+description: custom module for updating the video licence to basic users
+package: Custom 
+type: module
+version: 1.0
+core_version_requirement: ^8.8 || ^9

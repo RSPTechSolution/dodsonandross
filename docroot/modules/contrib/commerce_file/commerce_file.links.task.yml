@@ -1,0 +1,3 @@
+commerce_file.settings_form:
+  route_name: commerce_file.settings_form
+  title: File

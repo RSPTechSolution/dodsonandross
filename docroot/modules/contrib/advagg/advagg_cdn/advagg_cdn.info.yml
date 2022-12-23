@@ -1,0 +1,8 @@
+name: 'AdvAgg CDN'
+description: 'Use a shared CDN for JavaScript and/or CSS libraries, Google Libraries API currently.'
+package: 'Advanced CSS/JS Aggregation'
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - advagg:advagg
+type: module
+configure: advagg_cdn.settings

@@ -1,0 +1,9 @@
+use vapn:
+  title: 'Use vapn module'
+  description: 'Allow use of vapn module'
+bypass vapn:
+  title: 'Bypass vapn'
+  description: 'The role will be skipped on vapn list'
+manage vapn settings:
+  title: 'Manage vapn module'
+  description: 'Allow to manage the vapn module'

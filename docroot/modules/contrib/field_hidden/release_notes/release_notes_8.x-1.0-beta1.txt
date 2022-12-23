@@ -1,0 +1,34 @@
+Field Hidden 8.x-1.0-beta1
+
+
+Created against core beta version: 8.0.0-beta4
+
+
+Main issues
+-----------
+The D8 version of Field Hidden only defines widgets, contrary to the D7 version it doesn't define field types.
+As such, the D8 version is not really a port of the D7 version.
+But it should in most senses deliver the same effective benefit as the D7 version.
+Only number types and _plaintext_ text/textarea fields are supported.
+
+
+New features
+------------
+Hidden HTML element widgets for number and text fields.
+
+Bug fixes
+---------
+None.
+
+Security
+--------
+None.
+
+Install/update notes
+--------------------
+None.
+
+
+Special thanks
+--------------
+Amit Sedai (@amitsedaiz) initiated and layed the indispensable groundwork of the D8 version of Field Hidden.

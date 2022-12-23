@@ -1,0 +1,12 @@
+name: 'ImageAPI Optimize WebP'
+type: module
+description: 'Provides a WebP processor to derive webp images from other file formats.'
+core_version_requirement: ^8 || ^9
+package: 'Image Optimize'
+dependencies:
+  - imageapi_optimize:imageapi_optimize
+
+# Information added by Drupal.org packaging script on 2021-09-30
+version: '2.0.0-beta3'
+project: 'imageapi_optimize_webp'
+datestamp: 1633024035

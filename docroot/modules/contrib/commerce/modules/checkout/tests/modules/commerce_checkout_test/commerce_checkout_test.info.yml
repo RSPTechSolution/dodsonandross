@@ -1,0 +1,11 @@
+name: Commerce Checkout Test
+type: module
+description: Contains various non-specific things needed in tests.
+package: Testing
+dependencies:
+  - commerce:commerce_checkout
+
+# Information added by Drupal.org packaging script on 2022-10-19
+version: '8.x-2.32'
+project: 'commerce'
+datestamp: 1666183944

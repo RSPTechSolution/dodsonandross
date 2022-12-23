@@ -1,0 +1,102 @@
+/**
+ * Featured product component styles
+ */
+ .paragraph--type--card.featured-product{
+    padding-bottom: 65px;
+    padding-top: 65px;
+    @media (max-width:767px) {
+      padding-bottom: 45px;
+      padding-top: 45px;
+    }
+
+
+  .paragraph--type--title, .paragraph--type--text, .paragraph--type--atom-quote, .paragraph--type--atom-button{
+    width: 94%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .paragraph--type--title{
+    color: $black;
+    color: #4a4a4a;
+    font-size: 36px;
+    margin-top: 0;
+    margin-bottom: 12px;
+    width: 66%;
+    text-align: left;
+    font-family: 'Merriweather';
+    font-weight: 700;
+    @media (max-width:767px) {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+  }
+
+  .paragraph--type--text{
+    width: 65%;
+    font-size: 16px;
+    text-align: left;
+    margin-bottom: 30px;
+    line-height: 24px;
+    @media (max-width:767px) {
+      font-size: 14px;
+    }
+  }
+
+  .paragraph--type--atom-quote{
+    width: 94%;
+    font-size: 24px;
+    text-align: left;
+    font-style: italic;
+    margin-bottom: 30px;
+    line-height: 36px;
+    font-family: 'Merriweather';
+     @media (max-width:767px) {
+      font-size: 18px;
+      line-height: 30px;
+    }
+  }
+
+  .paragraph--type--image img{
+    max-height: 119px;
+    border-radius: 10px;
+  }
+
+  @include respond-to($tablet){
+    // .paragraph--type--columns .field--name-field-columns {
+    //   display: block;
+    // }
+    .paragraph--type--image {
+      max-height: 398px;
+      overflow: hidden;
+    }
+    .featured__product-image img{
+      max-height: 358px;
+      .page__node & {
+        width: 100%;
+        max-height: 267px;
+      }
+    }
+    .field--name-field-card-section .field--name-field-card-section .field--name-field-image img{
+      max-height: 118px;
+      .page__node & {
+        max-height: 80px;
+        width: 100%;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  @include respond-to($desktop){
+    .paragraph--type--columns {
+      .field--name-field-columns {
+        .paragraph--type--column:first-child{
+          width: 55%;
+        }
+        .paragraph--type--column:last-child{
+          width: 45%;
+        }
+      }
+    }
+  }
+}

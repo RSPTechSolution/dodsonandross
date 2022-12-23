@@ -1,0 +1,12 @@
+//Styles for node pages
+.viewsreference--view-title {
+    text-align: left;
+    color: #929292;
+    border-bottom: 2px solid #dfdfdf;
+    padding-bottom: 19px;
+    margin-bottom: 0;
+    font-size: 22px;
+    @include respond-to($tablet){
+      font-size: 28px;
+    }
+}

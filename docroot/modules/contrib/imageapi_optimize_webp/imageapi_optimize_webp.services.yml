@@ -1,0 +1,6 @@
+services:
+  imageapi_optimize_webp.route_subscriber:
+    class: Drupal\imageapi_optimize_webp\Routing\RouteSubscriber
+    arguments: ['@module_handler']
+    tags:
+      - { name: event_subscriber }

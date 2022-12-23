@@ -1,0 +1,14 @@
+services:
+  commerce_file.download_logger:
+    class: Drupal\commerce_file\DownloadLogger
+    arguments: ['@database', '@request_stack', '@datetime.time']
+
+  commerce_file.license_file_manager:
+    class: Drupal\commerce_file\LicenseFileManager
+    arguments: ['@current_user', '@config.factory', '@entity_type.manager', '@commerce_file.download_logger']
+
+  commerce_file.file_response_subscriber:
+    class: Drupal\commerce_file\EventSubscriber\FileResponseSubscriber
+    arguments: ['@current_user', '@entity_type.manager', '@commerce_file.download_logger', '@commerce_file.license_file_manager']
+    tags:
+      - { name: event_subscriber }

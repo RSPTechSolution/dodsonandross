@@ -1,0 +1,22 @@
+{
+  "name": "drupal/webp",
+  "type": "drupal-module",
+  "description": "Generates WebP copies of image style derivatives.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/webp",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/webp",
+    "source": "http://cgit.drupalcode.org/webp"
+  },
+  "require": {
+    "ext-gd": "*"
+  },
+  "authors": [
+    {
+      "name": "Bart Vanhoutte",
+      "email": "bart@croquemonsieur.be",
+      "role": "Maintainer"
+    }
+  ]
+}

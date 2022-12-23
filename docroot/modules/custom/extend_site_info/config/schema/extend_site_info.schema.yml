@@ -1,0 +1,12 @@
+# We want to extend the system.site configuration
+
+system.site:
+  mapping:
+    # Our field name is 'title'
+    title:
+      type: string
+      label: 'Site title'
+    # Our field name is 'title'
+    description:
+      type: string
+      label: 'Site description'

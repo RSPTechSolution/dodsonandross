@@ -1,0 +1,22 @@
+name: Commerce License
+type: module
+description: Provides a framework for selling access to local or remote resources.
+core_version_requirement: ^8.9 || ^9 || ^10
+package: 'Commerce (contrib)'
+configure: entity.commerce_license.collection
+dependencies:
+  - entity:entity
+  - commerce:commerce
+  - commerce:commerce_checkout
+  - commerce:commerce_product
+  - state_machine:state_machine
+  - recurring_period:recurring_period
+  - advancedqueue:advancedqueue
+config_devel:
+  install:
+    - views.view.commerce_licenses
+
+# Information added by Drupal.org packaging script on 2022-08-19
+version: '8.x-2.0-beta2'
+project: 'commerce_license'
+datestamp: 1660899236

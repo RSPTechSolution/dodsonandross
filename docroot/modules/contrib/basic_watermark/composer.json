@@ -1,0 +1,12 @@
+{
+    "name": "drupal/basic_watermark",
+    "type": "drupal-module",
+    "description": "Watermark image style effect for Drupal.",
+    "homepage": "http://drupal.org/project/basic_watermark",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "drupal/core": "^8 || ^9",
+        "ext-gd" : "*"
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,5 @@
+commerce_file.settings_form:
+  title: 'File'
+  route_name: 'commerce_file.settings_form'
+  parent: 'commerce.configuration'
+  description: 'File download settings.'

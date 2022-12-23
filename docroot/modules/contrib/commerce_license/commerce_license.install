@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for Commerce License.
+ */
+
+use Drupal\commerce_license\Event\LicenseEvent;
+use Drupal\Core\Field\BaseFieldDefinition;
+
+/**
+ * Update entity keys for licenses.
+ */
+function commerce_license_update_8201() {
+  $definition_update_manager = \Drupal::entityDefinitionUpdateManager();
+  $uid_storage_definition = $definition_update_manager->getFieldStorageDefinition('uid', 'commerce_license');
+  $entity_type = $definition_update_manager->getEntityType('commerce_license');
+  $keys = $entity_type->getKeys();
+  $keys['owner'] = 'uid';
+  $entity_type->set('entity_keys', $keys);
+  $definition_update_manager->updateEntityType($entity_type);
+  $definition_update_manager->updateFieldStorageDefinition($uid_storage_definition);
+}
+
+/**
+ * Add the 'originating_order' field to 'commerce_license' entities.
+ */
+function commerce_license_update_8202() {
+  $storage_definition = BaseFieldDefinition::create('entity_reference')
+    ->setLabel(t('Originating order'))
+    ->setDescription(t('The order that originated the license creation.'))
+    ->setSetting('target_type', 'commerce_order')
+    ->setSetting('handler', 'default')
+    ->setDisplayConfigurable('view', TRUE);
+
+  $update_manager = \Drupal::entityDefinitionUpdateManager();
+  $update_manager->installFieldStorageDefinition('originating_order', 'commerce_license', 'commerce_license', $storage_definition);
+}
+
+/**
+ * Add an event handler to licenses.
+ */
+function commerce_license_update_8203() {
+  $entity_definition_update = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $entity_definition_update->getEntityType('commerce_license');
+  $entity_type->setHandlerClass('event', LicenseEvent::class);
+  $entity_definition_update->updateEntityType($entity_type);
+}

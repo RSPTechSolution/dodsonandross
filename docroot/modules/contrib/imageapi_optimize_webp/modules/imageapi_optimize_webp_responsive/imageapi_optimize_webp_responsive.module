@@ -1,0 +1,92 @@
+<?php
+
+use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\image\Entity\ImageStyle;
+
+/**
+ * Implements hook_help().
+ */
+function imageapi_optimize_webp_responsive_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the imageapi_optimize_webp_responsive module.
+    case 'help.page.imageapi_optimize_webp_responsive':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Implements WebP derivatives in core Responsive Images') . '</p>';
+      return $output;
+    default:
+  }
+}
+
+/**
+ * Implements template_preprocess_responsive_image().
+ */
+function imageapi_optimize_webp_responsive_preprocess_responsive_image(&$variables) {
+  if (!empty($variables['sources'])) {
+    $webp_sources = [];
+    //@todo: Use cache to store ImageStyles that utilize a pipeine with WebP processor.
+    // Load the ResponsiveImageStyle entity to access the ImageStyles for sources.
+    $entity = ResponsiveImageStyle::load($variables['responsive_image_style_id']);
+    $image_styles = ImageStyle::loadMultiple($entity->getImageStyleIds());
+    $pipeline_webp_map = [];
+    $image_style_map = [];
+    // Iterate through the ImageStyles and look for the WebP processor.
+    foreach ($image_styles as $image_style) {
+      // If ImageStyle has pipeline, build map if WebP processor exists.
+      if ($image_style->hasPipeline()) {
+        // Check if pipeline has already been searched for processor.
+        if (!isset($pipeline_webp_map[$image_style->getPipeline()])) {
+          $pipeline_webp_map[$image_style->getPipeline()] = FALSE;
+          foreach ($image_style->getPipelineEntity()->getProcessors() as $processor) {
+            // If WebP processor is found, set map to true and break from loop.
+            if ($processor->getPluginId() == "imageapi_optimize_webp") {
+              $pipeline_webp_map[$image_style->getPipeline()] = TRUE;
+              break;
+            }
+          }
+        }
+        // If WebP processor exits on pipeline, build another map for jpg => webp paths.
+        if ($pipeline_webp_map[$image_style->getPipeline()]) {
+          $image_uri = $image_style->buildUri($variables['uri']);
+          $image_url = file_create_url($image_uri);
+          $image_relative_path = file_url_transform_relative($image_url);
+
+          $image_relative_path_file = explode('?', $image_relative_path)[0];
+          $webp_relative_path = str_replace($image_relative_path_file,
+            $image_relative_path_file . '.webp', $image_relative_path);
+          $image_style_map[$image_relative_path] = $webp_relative_path;
+        }
+      }
+    }
+    // If WebP processors are found on any of the ImageStyles, add webp derivatives as sources.
+    if ($image_style_map) {
+      foreach ($variables['sources'] as $source) {
+        $offset_key = NULL;
+        // Check for instances where srcset and data-srcset used interchangeably.
+        if ($source->offsetExists('srcset')) {
+          $offset_key = 'srcset';
+        }
+        elseif ($source->offsetExists('data-srcset')) {
+          $offset_key = 'data-srcset';
+        }
+        // If either key is found, continue.
+        if ($offset_key) {
+          $source_srcset = $source->offsetGet($offset_key)->value();
+          $cloned_srcset = strtr($source_srcset, $image_style_map);
+          if($source_srcset != $cloned_srcset) {
+            $source_webp = clone $source;
+            $source_webp->offsetSet($offset_key, $cloned_srcset);
+            $source_webp->offsetSet('type', 'image/webp');
+            $webp_sources[] = $source_webp;
+          }
+        }
+      }
+      // If any webp sources are created, merge them with existing sources.
+      if (!empty($webp_sources)) {
+        $variables['sources'] = array_merge($webp_sources, $variables['sources']);
+        $variables['output_image_tag'] = FALSE;
+      }
+    }
+  }
+}

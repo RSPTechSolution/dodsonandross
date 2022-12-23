@@ -1,0 +1,6 @@
+webp.settings_form:
+  title: 'WebP'
+  route_name: webp.settings_form
+  description: 'Configure WebP module.'
+  parent: system.admin_config_media
+  weight: 99

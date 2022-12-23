@@ -1,0 +1,12 @@
+ajax_blocks:
+  css:
+    base:
+      css/ajax_blocks.css: { }
+  js:
+    js/ajax_blocks.js: { }
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+    - core/drupal.ajax

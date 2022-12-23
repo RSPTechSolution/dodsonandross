@@ -1,0 +1,16 @@
+name: Entity Clone
+description: Add a clone action for all entities
+core:  "8.x"
+core_version_requirement: ^8 || ^9
+type: module
+configure: entity_clone.settings
+test_dependencies:
+  - entity_browser:entity_browser
+  - entity_usage:entity_usage
+  - paragraphs:paragraphs
+  - search_api:search_api
+
+# Information added by Drupal.org packaging script on 2022-09-19
+version: '8.x-1.0-beta7'
+project: 'entity_clone'
+datestamp: 1663573487

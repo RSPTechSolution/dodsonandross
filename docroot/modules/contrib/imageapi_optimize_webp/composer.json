@@ -1,0 +1,13 @@
+{
+  "name": "drupal/imageapi_optimize_webp",
+  "type": "drupal-module",
+  "description": "Add WebP support to Image API",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/imageapi_optimize_webp",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/imageapi_optimize_webp",
+    "source": "http://cgit.drupalcode.org/imageapi_optimize_webp"
+  },
+  "require": {}
+}

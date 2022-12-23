@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Installation and update functions for this project.
+ */
+
+/**
+ * Add configuration to the module config for CDN, scroll limit and time out.
+ */
+function cookies_update_8001() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('cookies.config');
+  $update_config = [
+    'lib_load_from_cdn' => 1,
+    'lib_scroll_limit' => 250,
+    'lib_timeout' => 0,
+  ];
+  foreach ($update_config as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+    }
+  }
+  $config->save(TRUE);
+}
+
+/**
+ * Remove time out setting.
+ */
+function cookies_update_8002() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('cookies.config');
+  if ($config->get('lib_timeout') !== NULL) {
+    $config->clear('lib_timeout');
+  }
+  $config->save(TRUE);
+}
+
+
+/**
+ * Remove deprecated callback settings.
+ */
+function cookies_update_8003() {
+  $config_factory = \Drupal::configFactory();
+  $config = $config_factory->getEditable('cookies.config');
+  $callback_url = $config->get('callback_url');
+
+  if (
+    (!$config->get('use_callback'))
+    || ($callback_url == '/cookies/example/callback.json')
+    || ($callback_url == '')
+  ) {
+    $config->clear('use_callback');
+    $config->clear('callback_method');
+    $config->clear('callback_url');
+  }
+
+  $config->set('store_auth_user_consent', false);
+  $config->save(TRUE);
+}

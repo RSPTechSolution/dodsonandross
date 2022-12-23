@@ -1,0 +1,53 @@
+# Migrates role purchase licenses from UC Roles module.
+# This is incomplete and is intended as an example.
+id: d6_uc_roles_license
+label: License from D6 Ubercart Roles.
+migration_tags:
+  - Drupal 6
+  - Ubercart
+migration_group: default
+source:
+  plugin: d6_ubercart_license_role
+process:
+  type:
+    # Migrate into the role license type.
+    plugin: default_value
+    default_value: role
+  uid:
+    plugin: migration_lookup
+    migration: # your user migration
+    source: uid
+  state:
+    plugin: default_value
+    default_value: active
+  product_variation:
+    plugin: migration_lookup
+    migration: # your product variation migration
+    source: nid
+  expiration_type:
+    # This assumes Commerce Recurring is used with licenses.
+    plugin: default_value
+    default_value:
+      target_plugin_id: unlimited
+  created: created
+  granted: created
+  renewed: renewed
+  changed: renewed
+  expires:
+    # This assumes Commerce Recurring is used with licenses.
+    plugin: default_value
+    default_value: 0
+  license_role:
+    plugin: default_value
+    default_value: # needs a role value, or a migration lookup.
+destination:
+  plugin: entity:commerce_license
+  destination_module: commerce_license
+migration_dependencies:
+  required: {}
+  optional: {}
+dependencies:
+  enforced:
+    module:
+      - commerce_product
+      - commerce_license

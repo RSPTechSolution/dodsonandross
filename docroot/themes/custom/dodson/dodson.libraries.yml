@@ -1,0 +1,53 @@
+global-css:
+  version: 1.0
+  css:
+    theme:
+      css/plyr.css: {}
+      css/main.css: {}
+
+      # css/videre.css: {}
+      css/aksVideoPlayer.min.css: {}
+
+fonts:
+  css:
+    theme:
+      css/fonts.css: {}
+
+global-js:
+  js:
+    # js/videre.js: {}
+    # js/aksVideoPlayer.min.js: {}
+    # js/artplayer.js: {}
+    js/plyr.js: {}
+    js/main.js: {}
+    js/custom_gtm_script.js: {}
+
+    # js/ResizeSensor.js: {}
+    /libraries/wavesurfer/dist/wavesurfer.js: {}
+    js/theia-sticky-sidebar.js: {}
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+
+components-js:
+  js:
+    js/vendor/slick.js: {}
+    js/header.js: {}
+    js/slider.js: {}
+    js/custom_slider.js: {}
+    js/gallery.js: {}
+
+
+  dependencies:
+    - core/drupal
+    - core/jquery
+    - core/jquery.once
+
+bootstrap:
+  js:
+    js/vendor/popper.min.js: {}
+    js/vendor/bootstrap.min.js: {}
+  css:
+    component:
+     css/vendor/bootstrap.min.css: {}

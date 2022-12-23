@@ -1,0 +1,5 @@
+services:
+  carlin_subscription_updates.order_complete:
+    class: Drupal\carlin_subscription_updates\EventSubscriber\OrderCompleteSubscriber
+    tags:
+      - { name: event_subscriber }

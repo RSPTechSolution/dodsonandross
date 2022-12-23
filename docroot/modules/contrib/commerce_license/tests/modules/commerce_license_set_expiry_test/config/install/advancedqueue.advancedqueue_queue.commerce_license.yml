@@ -1,0 +1,7 @@
+id: commerce_license
+label: 'Commerce License'
+backend: database
+backend_configuration: {}
+processor: cron
+processing_time: 180
+locked: true

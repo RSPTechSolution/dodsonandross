@@ -1,0 +1,38 @@
+{%
+  set classes = [
+    'field',
+    'field--name-' ~ field_name|clean_class,
+    'field--type-' ~ field_type|clean_class,
+    'field--label-' ~ label_display,
+    label_display == 'inline' ? 'clearfix',
+  ]
+%}
+{% if 'body_sex_client' in user.getroles or 'body_sex_leader' in user.getroles or 'administrator' in user.getroles or 'basic_user' in user.getroles %}
+<video id="player" playsinline controls></video>
+<div class="video-help-text-block">
+  <p>You can always switch to higher resolution video by changing resolution as described in screenshot. 
+    <span class="click-here-text">View Screenshots</span>
+  </p>
+</div>
+<div class="video-help-images">
+  <div class="video-help-images-inner">
+    <div class="img-left">
+      <img src="/themes/custom/dodson/images/video_media-1.png">
+    </div>
+    <div class="img-right">
+      <img src="/themes/custom/dodson/images/vedio_media-2.png">
+    </div>
+  </div>
+</div>
+{% for item in items %}
+<div{{ attributes.addClass(classes, 'field__items') }}>
+ {{ item.content }}
+</div>
+{% endfor %}
+{% endif %}
+{# <video width="100%" controls controlsList="nodownload">
+  {% for item in items %}
+    <source src="{{ item.content }}" type="video/mp4">
+    <source src="{{ item.content }}-webm" type="video/webm">
+  {% endfor %}
+</video> #}

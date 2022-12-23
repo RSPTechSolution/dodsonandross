@@ -1,0 +1,4 @@
+services:
+  vapn.handler:
+    class: Drupal\vapn\vapnHandler
+    arguments: ['@entity_type.manager']

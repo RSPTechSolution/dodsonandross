@@ -1,0 +1,24 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a block ajax tag.
+ *
+ * Available variables:
+ * - block_ajax_contextual_links: The contextual links for the block.
+ * - block_ajax_id: The generated block id.
+ * - block_settings: The settings/configuration for the block.
+ */
+#}
+{% set classes = [
+  'block-ajax',
+] %}
+<div{{ attributes.addClass(classes) }}>
+  {{ block_ajax_contextual_links }}
+  <div class="block-ajax-placeholder"
+       data-block-ajax-id="{{ block_ajax_id }}"
+       data-block-ajax-plugin-id="{{ block_settings.id }}"
+       data-block-ajax-provider="{{ block_settings.provider }}"
+       data-block-ajax-placeholder="{{ block_settings.block_ajax.placeholder }}"
+       data-block-ajax-show-spinner="{{ block_settings.block_ajax.show_spinner }}">
+  </div>
+</div>

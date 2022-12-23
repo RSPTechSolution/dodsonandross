@@ -1,0 +1,17 @@
+name: 'COOKiES Matomo'
+type: module
+description: 'Submodule of COOKiES to manage Matomo Analytics (by "matomo" module) inside of COOKiES consent management.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'COOKiES'
+dependencies:
+  - cookies:cookies
+  - matomo:matomo
+
+libraries:
+  - cookies_matomo/analytics
+
+# Information added by Drupal.org packaging script on 2022-08-17
+version: '1.1.0'
+project: 'cookies'
+datestamp: 1660736739

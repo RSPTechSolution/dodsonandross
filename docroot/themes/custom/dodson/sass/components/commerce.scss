@@ -1,0 +1,58 @@
+.view-commerce-cart-form{
+    table{
+        width: 100%;
+    }
+    thead{
+        padding-bottom: 20px;
+        tr{
+            height: 50px;
+        }
+    }
+    th{
+        font-weight: bold;
+        font-size: 16px;
+        color: $red;
+        &.views-field-purchased-entity{
+            text-align: left;
+            .field--label-above{
+                display: flex;
+                .field__label{
+                    margin-right: 15px;
+                    &:after{
+                        content: ':';
+                    }
+                }
+            }
+        }
+    }
+    td{
+        &.views-field-purchased-entity{
+            .field--label-above{
+                display: flex;
+                .field__label{
+                    margin-right: 15px;
+                    &:after{
+                        content: ':';
+                    }
+                }
+            }
+        }
+    }
+    .field--name-total-price{
+        margin-top: 25px;
+    }
+    .views-field-unit-price__number,
+    .views-field-remove-button{
+        text-align: center;
+    }
+    .views-field-total-price__number{
+        text-align: right;
+    }
+    .order-total-line{
+        padding: 0;
+    }
+    .order-total-line-label{
+        font-weight: bold;
+    }
+
+}

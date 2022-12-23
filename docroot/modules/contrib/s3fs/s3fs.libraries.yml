@@ -1,0 +1,4 @@
+s3fs.actionform:
+  css:
+    layout:
+      css/actionform.css: {}

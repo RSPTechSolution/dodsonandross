@@ -1,0 +1,7 @@
+vapn.vapn_config_form:
+  title: 'Permissions per Node'
+  route_name: vapn.vapn_config_form
+  description: 'Configure VAPN Permissions'
+  parent: user.admin_index
+  weight: 99
+

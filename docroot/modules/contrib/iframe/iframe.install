@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Contains install, uninstall and update functions for IFrame.
+ */
+
+use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
+use Drupal\iframe\FieldTypeUpdateUtil;
+
+/**
+ * Implements hook_install().
+ */
+/*
+function iframe_install() {
+}
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function iframe_uninstall() {
+  // Remove all from cache.
+  \Drupal::cache('data')->deleteAll();
+  // Remove the iframe fields.
+  $storage = \Drupal::entityTypeManager()->getStorage('field_storage_config');
+  $fields = $storage->loadByProperties([
+    'type' => 'iframe',
+  ]);
+  $storage->delete($fields);
+}
+
+/**
+ * Add an allowfullscreen column to iframe fields that do not have it yet.
+ */
+function iframe_update_8101(&$sandbox) {
+  // Caches have to be cleared first to ensure new fields are detected in the
+  // code.
+  drupal_flush_all_caches();
+  // 8204 fixes the database schema
+}
+
+/**
+ * Add a headerlevel column to iframe fields that do not have it yet.
+ */
+function iframe_update_8201(&$sandbox) {
+  // 8204 fixes the database schema
+}
+
+/**
+ * dummy for not working update-hook
+ */
+function iframe_update_8203(&$sandbox) {
+  // 8204 fixes the database schema
+}
+
+/**
+ * increase fields width and height to varchar(7), supersedes update number 8202
+ */
+function iframe_update_8204(&$sandbox) {
+  // Caches have to be cleared first to ensure new fields are detected in the
+  // code.
+  drupal_flush_all_caches();
+
+  $field_type = 'iframe';
+  FieldTypeUpdateUtil::_field_type_schema_column_spec_change_helper($field_type);
+}
+

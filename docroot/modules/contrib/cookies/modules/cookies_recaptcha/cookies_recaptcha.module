@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @file
+ * Contains cookies_recaptcha.module.
+ */
+
+use Drupal\cookies\CookiesKnockOutService;
+
+/**
+ * Implements hook_captcha().
+ */
+function cookies_recaptcha_captcha($op, $captcha_type = '') {
+  switch ($op) {
+    case 'list':
+      return ['reCAPTCHA'];
+
+    case 'generate':
+      $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+      if ($doKo) {
+        $captcha = recaptcha_captcha($op, 'reCAPTCHA');
+        if(isset($captcha["form"]["recaptcha_widget"]["#attached"]["html_head"])) {
+          foreach ($captcha["form"]["recaptcha_widget"]["#attached"]["html_head"] as $key => $head_tag) {
+            if (in_array('recaptcha_api', $head_tag)) {
+              $captcha["form"]["recaptcha_widget"]["#attached"]["html_head"][$key][0]['#attributes'] += [
+                'type' => 'text/plain',
+                'id' => 'cookies_recaptcha',
+              ];
+              $captcha["form"]["recaptcha_widget"]["#attached"]["library"][] = 'cookies_recaptcha/default';
+              break;
+            }
+          }
+        }
+        return $captcha;
+      }
+  }
+}

@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Template for the license expiry mail.
+ *
+ * Available variables:
+ * - license_entity: The license entity.
+ * - purchased_entity: The entity which was purchased to obtain this license.
+ * - purchased_entity_url: The URL of the purchased entity.
+ *
+ * @ingroup themeable
+ */
+#}
+<table style="margin: 15px auto 0 auto; max-width: 768px; font-family: arial,sans-serif">
+  <tbody>
+  <tr>
+    <td>
+      {#
+      TODO: restore this when the store is available from the license.
+      See TODO in LicenseExpireNotify::process().
+      <table style="margin-left: auto; margin-right: auto; max-width: 768px; text-align: center;">
+        <tbody>
+        <tr>
+          <td>
+            <a href="{{ url('<front>') }}" style="color: #0e69be; text-decoration: none; font-weight: bold; margin-top: 15px;">{{ order_entity.getStore.label }}</a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      #}
+      <table style="text-align: center; min-width: 450px; margin: 5px auto 0 auto; border: 1px solid #cccccc; border-radius: 5px; padding: 40px 30px 30px 30px;">
+        <tbody>
+        <tr>
+          <td style="font-size: 30px; padding-bottom: 30px">{{ 'License Expiry'|t }}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold; padding-top:15px; padding-bottom: 15px; text-align: left; border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc">
+            {{ 'Your purchase of @license has now expired.'|t({'@license': license_entity.label}) }}
+
+            {% if (purchased_entity) %}
+              {{ 'You may renew it by repurchasing <a href="@product-url">@product-label</a>.'|t({
+                '@product-url': purchased_entity_url.toString,
+                '@product-label': purchased_entity.label,
+              }) }}
+            {% endif %}
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </td>
+  </tr>
+  </tbody>
+</table>

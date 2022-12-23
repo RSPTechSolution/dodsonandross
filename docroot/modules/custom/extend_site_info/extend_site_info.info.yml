@@ -1,0 +1,6 @@
+name: Extend Site Information
+description: Extends default Drupal Site information form
+package: Custom
+
+type: module
+core_version_requirement: ^8.8 || ^9

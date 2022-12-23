@@ -1,0 +1,13 @@
+block_ajax.ajax_block:
+  path: '/block/ajax/{block_id}'
+  defaults:
+    _controller: '\Drupal\block_ajax\Controller\AjaxBlockController::loadBlock'
+  requirements:
+    _permission: 'access content'
+  options:
+    _admin_route: FALSE
+    no_cache: TRUE
+    query:
+      nid: ""
+      uid: ""
+      tid: ""

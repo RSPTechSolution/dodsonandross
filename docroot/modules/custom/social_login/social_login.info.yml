@@ -1,0 +1,15 @@
+name: 'OneAll Social Login'
+type: module
+description: 'Allows your users to register and login with 40+ social networks like for example Twitter, Facebook, Paypal, LinkedIn, Instagram, Vimeo, Google and Yahoo'
+package: 'OneAll Social Login'
+# core: 8.x
+configure: social_login.admin_settings
+#dependencies:
+libraries:
+  - social_login/configuration
+
+# Information added by Drupal.org packaging script on 2019-08-12
+version: '8.x-2.89'
+core_version_requirement: ^8.8 || ^9
+# project: 'social_login'
+datestamp: 1565618592

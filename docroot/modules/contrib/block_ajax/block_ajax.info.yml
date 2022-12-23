@@ -1,0 +1,14 @@
+name: 'Ajax Block'
+type: module
+description: 'Provides ability to configure and loads blocks via Ajax.'
+core_version_requirement: ^8.8 || ^9
+configure: block.admin_display
+dependencies:
+  - drupal:block
+  - drupal:contextual
+  - token:token
+
+# Information added by Drupal.org packaging script on 2022-09-13
+version: '8.x-2.3'
+project: 'block_ajax'
+datestamp: 1663070766

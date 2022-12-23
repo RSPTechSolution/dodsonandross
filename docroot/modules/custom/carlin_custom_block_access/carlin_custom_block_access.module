@@ -1,0 +1,205 @@
+<?php
+use Drupal\block\Entity\Block;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\Core\Datetime\DrupalDateTime;
+
+
+function carlin_custom_block_access_block_access(Block $block, $operation, AccountInterface $account) {
+	
+	if($block->getPluginId() == 'views_block:gallery-block_1') {
+		$path = \Drupal::request()->getPathInfo();
+		$arg  = explode('/',$path);
+		$display = TRUE;
+		if($arg[1] == 'galleries') {
+			$display = FALSE;
+		}elseif ($arg[1] == 'node' && $arg[2] == '166') {
+			$display = FALSE;
+		}
+		return AccessResult::forbiddenIf($display)->addCacheableDependency($block);
+			
+			
+	}
+
+	// if($block->getPluginId() == 'views_block:child_taxonomy_of_gallery_category-block_1'){
+	// 	$path = \Drupal::request()->getPathInfo();
+	// 	$arg  = explode('/',$path);
+	// 	$display = TRUE;
+	// 	if($arg[1] == 'gallery-items'){
+	// 		$display = FALSE;
+	// 	}
+	// 	return AccessResult::forbiddenIf($display)->addCacheableDependency($block);
+	// }
+	// if($block->getPluginId() == 'system_menu_block:vertical-nav') {
+	// 	$path = \Drupal::request()->getPathInfo();
+	// 	$arg  = explode('/',$path);
+	// 	if($arg[1] == 'content-items') {
+	// 		return AccessResult::forbiddenIf(TRUE)->addCacheableDependency($block);
+	// 	}
+	// }
+	
+}
+
+// function carlin_custom_block_access_form_alter(&$form, $form_state, $form_id) {
+// 	if($form_id == 'views_exposed_form' && $form['#id'] == 'views-exposed-form-gallery-items-page-1') {
+		
+// 		$path = \Drupal::request()->getPathInfo();
+// 		$arg  = explode('/',$path);
+// 		$vid = 'gallery_category';
+// 		$terms =\Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadTree($vid, $arg[2], NULL, False);
+		
+// 		if(!empty($terms)) {
+// 			$match = [];
+// 			foreach ($terms as $term_key => $term_value) {
+// 				$match['All'] = '-Any-';
+// 				$match[$term_value->tid] = $term_value->name;
+// 			}
+// 			$form['field_gallery_category_target_id']['#options'] = $match;
+// 		}else{
+// 			$match['_none'] = 'Empty';
+// 			unset($form['field_gallery_category_target_id']);
+// 			unset($form['actions']);
+// 		}	
+// 	}		
+// }
+
+
+
+function carlin_custom_block_access_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+	if($view->id() == 'gallery' && $view->current_display == 'block_1') {
+		$database = \Drupal::database();
+		$result = $database->select('taxonomy_term__parent', 't')
+	    ->fields('t', ['entity_id'])
+	    ->condition('t.bundle', 'gallery_category', '=')
+	    ->condition('t.parent_target_id', 0, '=')
+	    ->execute()
+	    ->fetchAllKeyed(0,0);
+	    if(!empty($result)){
+	    	foreach ($query->where as &$condition_group) {
+		    	foreach ($condition_group['conditions'] as &$condition) {
+		    		if(strpos($condition['field'], 'taxonomy_term_field_data.tid') !== false) {
+		    			$condition['value'] = $result;
+		    			$condition['operator'] = 'IN';
+		    		}
+		    	}
+	    	}
+	    }	    	    
+	}
+}
+
+function carlin_custom_block_access_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+	if($form_id == 'commerce_order_item_add_to_cart_form_commerce_product_86') {
+		$current_user = \Drupal::currentUser();
+		$roles = $current_user->getRoles();
+		if(in_array('basic_user', $roles)) {
+			$form['actions']['submit']['#attributes']['disabled']  = 'disabled';
+			// $form['actions']['submit']['#attributes']['class'][] = 'd-none';
+		}
+	}
+	if($form_id == 'commerce_order_item_add_to_cart_form_commerce_product_76') {
+		$current_user = \Drupal::currentUser();
+		$roles = $current_user->getRoles();
+		if(in_array('body_sex_client', $roles)) {
+			$form['actions']['submit']['#attributes']['disabled']  = 'disabled';
+			// $form['actions']['submit']['#attributes']['class'][] = 'd-none';
+		}
+	}
+	if($form_id == 'commerce_order_item_add_to_cart_form_commerce_product_71') {
+		$current_user = \Drupal::currentUser();
+		$roles = $current_user->getRoles();
+		if(in_array('body_sex_leader', $roles)) {
+			$form['actions']['submit']['#attributes']['disabled']  = 'disabled';
+		}
+	}
+}
+
+
+function carlin_custom_block_access_preprocess_menu_local_task(&$variables) {
+
+	$current_user = \Drupal::currentUser();
+    $roles = $current_user->getRoles();
+
+    if(in_array('administrator', $roles)) {
+    	return;
+    }
+
+	$target_routes = [
+    'entity.user.canonical' => t('Profile info'),
+    'entity.user.edit_form' => t('Edit'),
+    'view.commerce_user_orders.order_page' => t('My Plan'),
+  ];
+  $current_route = \Drupal::routeMatch()->getRouteName();
+
+  if (isset($target_routes[$current_route])) {
+    /** @var \Drupal\Core\Url $url */
+    $url = $variables['link']['#url'];
+    $route_name = $url->getRouteName();
+    $variables['link']['#title'] = $target_routes[$route_name];
+  }
+}
+
+function carlin_custom_block_access_mail_alter(&$message) {
+	global $base_url;
+	
+	if($message['id'] == 'commerce_order_receipt' && !empty($message['id'])){
+		$order = $message['params']['body']['#order_entity'];
+		$oder_id = $order->get('order_id')->getString();
+		$store_id = $order->get('store_id')->getValue()[0]['target_id'];
+		$store_name = $order->getStore()->getName();
+		$product_variation = $order->getItems()[0]->getPurchasedEntity();
+		$product_title = $product_variation->getTitle();
+		$price = $product_variation->getPrice();
+		if(!empty($order->get('payment_method')->first()->entity)){
+			$payment_method = $order->get('payment_method')->first()->entity->label();
+		}else{
+			$payment_method = '';
+		}
+		// $profile = $order->getBillingProfile();
+		// echo '<pre>';var_dump($message);die;
+		$message['body'] = [];
+
+		$message['params']['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+		// $message['params']['headers'] = array(
+  //           'content-type' => 'text/html',
+  //           'MIME-Version' => '1.0',  
+  //         );
+		$message_list = array('order_id' => $oder_id , 'store_id' => $store_id , 'store_name' => $store_name , 
+						'product_title' => $product_title , 'price' => $price , 
+						'payment_method' => $payment_method);
+
+		$newdata = '<div style="border:2px solid #C4C4C4; padding:25px;">
+		<b>Order Number:</b> ' .$message_list['order_id']. '<br><br><b>Store:</b> ' .$message_list['store_name'].' '.$message_list['store_id'].  '<br><br><b>Product:</b> ' .$message_list['product_title']. '<br><br><b>Total Price:</b> ' .$message_list['price']. '<br><br><b>Payment:</b> ' .$message_list['payment_method'].'<br><br>'.$base_url.'</div>';
+
+    	// Assigning new message to mail body.
+
+		$message['body'][] = $newdata;
+  
+
+	}
+
+	if(!empty($message['id']) && $message['id'] == 'user_register_no_approval_required') {
+		$token_service = \Drupal::token();
+		$language_interface = \Drupal::languageManager()->getCurrentLanguage();
+		$account = $message['params']['account'];  
+    $one_time_url_token = '[user:one-time-login-url]';  
+    $one_time_url = $token_service->replace($one_time_url_token, ['user' => $account], ['langcode' => $language_interface->getId(), 'callback' => 'user_mail_tokens', 'clear' => TRUE]);
+    
+    $message['body'] = [];
+
+    // $message['params']['headers'] = array(
+    //         'content-type' => 'text/html',
+    //         'MIME-Version' => '1.0',  
+    //       );
+    $message['params']['headers']['Content-Type'] = 'text/html; charset=UTF-8; format=flowed; delsp=yes';
+    $login_link = '<div style="border:2px solid #C4C4C4; padding:25px;">
+		<b>One Time Login Link:</b> ' .$one_time_url.'</div>';
+    $message['body'][] = $login_link;
+		// echo '<pre>';var_dump($message);die;
+	}
+}
+
+
+?>

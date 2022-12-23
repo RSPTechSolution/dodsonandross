@@ -1,0 +1,11 @@
+name: 'Commerce License Test'
+type: module
+description: 'Provides test license types.'
+package: Testing
+dependencies:
+  - commerce_license:commerce_license
+
+# Information added by Drupal.org packaging script on 2022-08-19
+version: '8.x-2.0-beta2'
+project: 'commerce_license'
+datestamp: 1660899236

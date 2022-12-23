@@ -1,0 +1,9 @@
+{
+    "name": "drupal/lazyloader",
+    "description": "Automatically lazyload images on windows scroll, makes sites with multiple images load faster.",
+    "type": "drupal-module",
+    "require": {
+        "dawehner/lazysizes": "dev-master"
+    },
+    "license": "GPLv2+"
+}

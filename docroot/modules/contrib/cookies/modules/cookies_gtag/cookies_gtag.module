@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Contains cookies_ga.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Template\Attribute;
+use Drupal\cookies\CookiesKnockOutService;
+
+/**
+ * Implements hook_help().
+ */
+function cookies_gtag_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the cookies_ga module.
+    case 'help.page.cookies_ga':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Submodule of COOKiES to manage Google Analytics (by "google_analytics" module) inside of COOKiES consent management.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ */
+function cookies_gtag_page_attachments(&$page) {
+  $doKo = CookiesKnockOutService::getInstance()->doKnockOut();
+  if ($doKo && isset($page["#attached"]["html_head"])) {
+    $gtag_exists = FALSE;
+    foreach ($page["#attached"]["html_head"] as &$head_tag) {
+      if (preg_match('/^google_tag_script_tag/', $head_tag[1])) {
+        if (isset($head_tag[0]['#attributes'])) {
+          if ($head_tag[0]['#attributes'] instanceof Attribute) {
+            $head_tag[0]['#attributes']->setAttibute('id', ['cookies_gtag']);
+            $head_tag[0]['#attributes']->setAttibute('type', ['text/plain']);
+          }
+          elseif (is_array($head_tag[0]['#attributes'])) {
+            $head_tag[0]['#attributes']['id'] = 'cookies_gtag';
+            $head_tag[0]['#attributes']['type'] = 'text/plain';
+          }
+        }
+        else {
+          $head_tag[0]['#attributes'] = [
+            'id' => 'cookies_gtag',
+            'type' => 'text/plain',
+          ];
+        }
+        $gtag_exists = TRUE;
+      }
+    }
+    if ($gtag_exists) {
+      $page["#attached"]["library"][] = 'cookies_gtag/gtag';
+    }
+  }
+}

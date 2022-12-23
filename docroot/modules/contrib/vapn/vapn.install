@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Installation for the VAPN module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function vapn_schema() {
+
+  // The main VAPN table.
+  $schema['vapn'] = array(
+    'description' => 'Role view permissions per node.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'The primary identifier for a node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'rid' => array(
+        'description' => 'The role id that has the view permission.',
+        'type' => 'varchar_ascii',
+        'length' => DRUPAL_EXTENSION_NAME_MAX_LENGTH,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('nid', 'rid'),
+  );
+
+  // Return the database table schema definition.
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function vapn_uninstall() {
+  \Drupal::database()->delete('vapn');
+};

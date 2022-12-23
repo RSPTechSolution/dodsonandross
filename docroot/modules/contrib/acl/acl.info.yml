@@ -1,0 +1,11 @@
+name: ACL
+type: module
+description: 'Access control list API. Has no features on its own.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'Access control'
+
+# Information added by Drupal.org packaging script on 2021-02-19
+version: '8.x-1.0-beta1'
+project: 'acl'
+datestamp: 1613711018

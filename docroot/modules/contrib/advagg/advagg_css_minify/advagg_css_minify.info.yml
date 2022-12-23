@@ -1,0 +1,8 @@
+name: 'AdvAgg Minify CSS'
+description: 'Minify CSS.'
+package: 'Advanced CSS/JS Aggregation'
+core_version_requirement: ^8.8 || ^9
+dependencies:
+  - advagg:advagg
+type: module
+configure: advagg_css_minify.settings

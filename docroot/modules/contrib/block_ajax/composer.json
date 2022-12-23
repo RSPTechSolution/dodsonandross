@@ -1,0 +1,22 @@
+{
+    "name": "drupal/block_ajax",
+    "type": "drupal-module",
+    "description": "Provides ability to configure and loads blocks via AJAX.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "George Anderson (geoanders)",
+            "homepage": "https://www.drupal.org/u/geoanders",
+            "role": "Maintainer"
+        }
+    ],
+    "homepage": "https://drupal.org/project/block_ajax",
+    "support": {
+        "issues": "https://drupal.org/project/issues/block_ajax",
+        "source": "https://git.drupalcode.org/project/block_ajax"
+    },
+    "require": {
+        "drupal/core": "^8.8 || ^9",
+        "drupal/token": "^1.9"
+    }
+}

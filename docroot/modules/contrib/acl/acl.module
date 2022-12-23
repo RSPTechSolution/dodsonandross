@@ -1,0 +1,442 @@
+<?php
+
+/**
+ * @file
+ * An API module providing by-user access control lists.
+ *
+ * This module handles ACLs on behalf of other modules. The two main reasons
+ * to do this are so that modules using ACLs can share them with each
+ * other without having to actually know much about them, and so that
+ * ACLs can easily co-exist with the existing node_access system.
+ */
+
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
+use Drupal\user\Entity\User;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+
+/**
+ * Create a new ACL.
+ *
+ * The client module will have to keep track of the ACL. For that it can
+ * assign either a $name or a $number to this ACL.
+ *
+ * @param string $module
+ *   The name of the client module.
+ * @param string $name
+ *   An arbitrary name for this ACL, freely defined by the client module.
+ * @param int $figure
+ *   An arbitrary number for this ACL, freely defined by the client module.
+ * @return int
+ *   The ID of the newly created ACL.
+ */
+function acl_create_acl($module, $name = NULL, $figure = NULL) {
+  $query = \Drupal::database()->insert('acl');
+  $query->fields([
+    'module' => $module,
+    'name' => $name,
+    'figure' => $figure,
+  ]);
+
+  return $query->execute();
+}
+
+/**
+ * Delete an existing ACL.
+ */
+function acl_delete_acl($acl_id) {
+  $database = \Drupal::database();
+
+  $database->delete('acl')
+    ->condition('acl_id', $acl_id)
+    ->execute();
+  $database->delete('acl_user')
+    ->condition('acl_id', $acl_id)
+    ->execute();
+  $database->delete('acl_node')
+    ->condition('acl_id', $acl_id)
+    ->execute();
+}
+
+/**
+ * Add the specified UID to an ACL.
+ */
+function acl_add_user($acl_id, $uid) {
+  $database = \Drupal::database();
+
+  $test_uid = $database->query("SELECT uid FROM {acl_user} WHERE acl_id = :acl_id AND uid = :uid", [
+    'acl_id' => $acl_id,
+    'uid' => $uid,
+  ])->fetchField();
+
+  if (!$test_uid) {
+    $database
+      ->insert('acl_user')
+      ->fields([
+        'acl_id' => $acl_id,
+        'uid' => $uid,
+      ])
+      ->execute();
+  }
+}
+
+/**
+ * Remove the specified UID from an ACL.
+ */
+function acl_remove_user($acl_id, $uid) {
+  \Drupal::database()->delete('acl_user')
+    ->condition('acl_id', $acl_id)
+    ->condition('uid', $uid)
+    ->execute();
+}
+
+/**
+ * Remove all users from an ACL.
+ */
+function acl_remove_all_users($acl_id) {
+  \Drupal::database()->delete('acl_user')
+    ->condition('acl_id', $acl_id)
+    ->execute();
+}
+
+/**
+ * Provide a form to edit the ACL that can be embedded in other forms.
+ *
+ * Pass $new_acl=TRUE if you have no ACL yet, but do supply a string
+ * like 'my_module_new_acl' as $acl_id anyway; create the ACL and set
+ * $form['acl_id'] before calling acl_save_form().
+ */
+function acl_edit_form(FormStateInterface $form_state, $acl_id, $label = NULL, $new_acl = FALSE) {
+  module_load_include('inc', 'acl', 'acl.admin');
+  $build_info = $form_state->getBuildInfo();
+  $build_info['files'][] = [
+    'module' => 'acl',
+    'type' => 'inc',
+    'name' => 'acl.admin',
+  ];
+  $form_state->setBuildInfo($build_info);
+
+  return _acl_edit_form($acl_id, $label, $new_acl);
+}
+
+/**
+ * Provide access control to all nodes selected by a subquery, based upon an ACL id.
+ */
+function acl_add_nodes(SelectInterface $subselect, $acl_id, $view, $update, $delete, $priority = 0) {
+  $database = \Drupal::database();
+
+  $database->delete('acl_node')
+    ->condition('acl_id', $acl_id)
+    ->condition('nid', $subselect, 'IN')
+    ->execute();
+  $subselect->addExpression($acl_id, 'acl_id');
+  $subselect->addExpression((int) $view, 'grant_view');
+  $subselect->addExpression((int) $update, 'grant_update');
+  $subselect->addExpression((int) $delete, 'grant_delete');
+  $subselect->addExpression($priority, 'priority');
+  if (\Drupal::database()->driver() == 'mysql') {
+    $database->insert('acl_node')
+      ->from($subselect)
+      ->execute();
+  }
+  else {
+    // The PostgreSQL and SQLite drivers currently fail to
+    // generate the required parentheses around the subselect and
+    // cause an error in their respective database systems.
+    $results = $subselect->execute()->fetchAll(PDO::FETCH_ASSOC);
+    if (!empty($results)) {
+      $query = $database->insert('acl_node');
+      $query->fields([
+        'acl_id',
+        'nid',
+        'grant_view',
+        'grant_update',
+        'grant_delete',
+        'priority',
+      ]);
+      foreach ($results as $result) {
+        $query->values($result);
+      }
+      $query->execute();
+    }
+  }
+}
+
+/**
+ * Provide access control to a node based upon an ACL id.
+ */
+function acl_node_add_acl($nid, $acl_id, $view, $update, $delete, $priority = 0) {
+  acl_node_add_acl_record([
+    'acl_id'       => $acl_id,
+    'nid'          => $nid,
+    'grant_view'   => (int) $view,
+    'grant_update' => (int) $update,
+    'grant_delete' => (int) $delete,
+    'priority'     => $priority,
+  ]);
+}
+
+/**
+ * Provide access control to a node based upon an ACL id.
+ */
+function acl_node_add_acl_record(array $record) {
+  $database = \Drupal::database();
+
+  $database->delete('acl_node')
+    ->condition('acl_id', $record['acl_id'])
+    ->condition('nid', $record['nid'])
+    ->execute();
+  $database->insert('acl_node')
+    ->fields($record)
+    ->execute();
+}
+
+/**
+ * Remove an ACL completely from a node.
+ */
+function acl_node_remove_acl($nid, $acl_id) {
+  \Drupal::database()->delete('acl_node')
+    ->condition('acl_id', $acl_id)
+    ->condition('nid', $nid)
+    ->execute();
+}
+
+/**
+ * Clear all of a module's ACLs from a node.
+ */
+function acl_node_clear_acls($nid, $module) {
+  $database = \Drupal::database();
+
+  $select = $database->select('acl', 'a')
+    ->fields('a', ['acl_id'])
+    ->condition('a.module', $module);
+  $database->delete('acl_node')
+    ->condition('nid', $nid)
+    ->condition('acl_id', $select, 'IN')
+    ->execute();
+}
+
+/**
+ * Get the id of an ACL by name (+ optionally figure).
+ */
+function acl_get_id_by_name($module, $name, $figure = NULL) {
+  $query = \Drupal::database()->select('acl', 'a')
+    ->fields('a', ['acl_id'])
+    ->condition('a.module', $module)
+    ->condition('a.name', $name);
+
+  if (isset($figure)) {
+    $query->condition('a.figure', $figure);
+  }
+
+  return $query->execute()->fetchField();
+}
+
+/**
+ * Get the id of an ACL by figure.
+ */
+function acl_get_id_by_figure($module, $figure) {
+  $query = \Drupal::database()->select('acl', 'a')
+    ->fields('a', ['acl_id'])
+    ->condition('a.module', $module)
+    ->condition('a.figure', $figure);
+
+  return $query->execute()->fetchField();
+}
+
+/**
+ * Determine whether an ACL has some assigned users.
+ */
+function acl_has_users($acl_id) {
+  return \Drupal::database()
+    ->query("SELECT COUNT(uid) FROM {acl_user} WHERE acl_id = :acl_id", [
+      'acl_id' => $acl_id,
+    ])
+    ->fetchField();
+}
+
+/**
+ * Determine whether an ACL has a specific assigned user.
+ */
+function acl_has_user($acl_id, $uid) {
+  return \Drupal::database()
+    ->query("SELECT COUNT(uid) FROM {acl_user} WHERE acl_id = :acl_id AND uid = :uid", [
+      'acl_id' => $acl_id,
+      'uid' => $uid,
+    ])
+    ->fetchField();
+}
+
+/**
+ * Get an array of acl_ids held by a user.
+ */
+function acl_get_ids_by_user($module, $uid, $name = NULL, $figure = NULL) {
+  $query = \Drupal::database()->select('acl', 'a');
+  $query->join('acl_user', 'au', 'a.acl_id = au.acl_id');
+  $query
+    ->fields('a', ['acl_id'])
+    ->condition('a.module', $module)
+    ->condition('au.uid', $uid);
+  if (isset($name)) {
+    $query->condition('a.name', $name);
+  }
+  if (isset($figure)) {
+    $query->condition('a.figure', $figure);
+  }
+  $acl_ids = $query->execute()->fetchCol();
+
+  return $acl_ids;
+}
+
+/**
+ * Get the uids of an ACL.
+ */
+function acl_get_uids($acl_id) {
+  $uids = \Drupal::database()
+    ->query("SELECT uid FROM {acl_user} WHERE acl_id = :acl_id", [
+      'acl_id' => $acl_id,
+    ])
+    ->fetchCol();
+
+  return $uids;
+}
+
+/**
+ * Implements hook_node_access_records().
+ */
+function acl_node_access_records(NodeInterface $node) {
+  if (!$node->id()) {
+    return;
+  }
+
+  $result = \Drupal::database()
+    ->query("SELECT n.*, 'acl' AS realm, n.acl_id AS gid, a.module FROM {acl_node} n INNER JOIN {acl} a ON n.acl_id = a.acl_id WHERE nid = :nid", [
+      'nid' => $node->id(),
+    ], ['fetch' => PDO::FETCH_ASSOC]);
+  $grants = array();
+  foreach ($result as $grant) {
+    if (\Drupal::moduleHandler()->invoke($grant['module'], 'enabled')) {
+      if (acl_has_users($grant['gid'])) {
+        $grants[] = $grant;
+      }
+      else {
+        //just deny access
+        $grants[] = [
+          'realm' => 'acl',
+          'gid' => $grant['gid'],
+          'grant_view' => 0,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+          'priority' => $grant['priority'],
+        ];
+      }
+    }
+  }
+
+  return $grants;
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function acl_node_grants($account, $op) {
+  $acl_ids = \Drupal::database()
+    ->query("SELECT acl_id FROM {acl_user} WHERE uid = :uid", [
+      'uid' => $account->id(),
+    ])
+    ->fetchCol();
+
+  return (!empty($acl_ids) ? ['acl' => $acl_ids] : NULL);
+}
+
+/**
+ * Implements hook_node_delete().
+ */
+function acl_node_delete(NodeInterface $node) {
+  \Drupal::database()->delete('acl_node')
+    ->condition('nid', $node->id())
+    ->execute();
+}
+
+/**
+ * Implements hook_user_cancel().
+ */
+function acl_user_cancel($edit, AccountInterface $account, $method) {
+  \Drupal::database()->delete('acl_user')
+    ->condition('uid', $account->id())
+    ->execute();
+}
+
+/**
+ * Implements hook_node_access_explain().
+ */
+function acl_node_access_explain($row) {
+  static $interpretations = array();
+  $database = \Drupal::database();
+
+  if ($row->realm == 'acl') {
+    if (!isset($interpretations[$row->gid])) {
+      $acl = $database->query("SELECT * FROM {acl} WHERE acl_id = :acl_id", [
+        'acl_id' => $row->gid,
+      ])->fetchObject();
+      $acl->tag = '?';
+      if (!isset($acl->name)) {
+        $acl->tag = $acl->figure;
+      }
+      elseif (!isset($acl->figure)) {
+        $acl->tag = $acl->name;
+      }
+      else {
+        $acl->tag = $acl->name . '-' . $acl->figure;
+      }
+      foreach (User::loadMultiple(acl_get_uids($row->gid)) as $account) {
+        $account_names[] = _acl_format_account_name($account->getAccountName());
+      }
+      if (!empty($account_names)) {
+        $account_names = implode(', ', $account_names);
+        $interpretations[$row->gid] = _acl_get_explanation("$acl->module/$acl->tag: $account_names", $acl->acl_id, $acl->module, $acl->name, $acl->figure, $account_names);
+      }
+      elseif ($row->gid == 0) {
+        $result = $database->query("SELECT an.acl_id, a.module, a.name FROM {acl_node} an JOIN {acl} a ON an.acl_id = a.acl_id LEFT JOIN {acl_user} au ON a.acl_id = au.acl_id WHERE an.nid = :nid AND au.uid IS NULL", [
+          'nid' => $row->nid,
+        ]);
+        foreach ($result as $acl) {
+          $rows[] = _acl_get_explanation("$acl->acl_id:&nbsp;$acl->module/$acl->tag", $acl->acl_id, $acl->module, $acl->name, $acl->figure);
+        }
+
+        if (!empty($rows)) {
+          return implode('<br />', $rows);
+        }
+
+        return 'No access via ACL.';
+      }
+      else {
+        $interpretations[$row->gid] = _acl_get_explanation("$acl->module/$acl->tag: no users!", $acl->acl_id, $acl->module, $acl->name, $acl->figure);
+      }
+    }
+
+    return $interpretations[$row->gid];
+  }
+}
+
+/**
+ * Helper function to ask the client for its interpretation of the given
+ * grant record.
+ */
+function _acl_get_explanation($text, $acl_id, $module, $name, $figure, $usernames = NULL) {
+  $hook = $module . '_acl_explain';
+  if (function_exists($hook)) {
+    return '<span title="' . $hook($acl_id, $name, $figure, $usernames) . '">' . $text . '</span>';
+  }
+
+  return $text;
+}
+
+/**
+ * Helper function to format an account name.
+ */
+function _acl_format_account_name($account) {
+  return check_plain(format_username($account));
+}
+

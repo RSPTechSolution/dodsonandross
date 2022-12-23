@@ -1,0 +1,8 @@
+<?php
+
+function websocket_page_attachments(array &$page) {
+
+  $page['#attached']['library'][] = 'websocket/chat';
+}
+
+?>

@@ -1,0 +1,23 @@
+.search-results{
+    padding: 0;
+        
+    li{
+        margin-left: 0;
+    }
+
+
+}
+.search-form{
+    input[type=submit]{
+        margin: 15px 0;
+    }
+    input[type="search"]{
+        border: none;
+        background: #f2f2f2;
+        border-radius: 10px;
+        padding: 10px 25px;
+    }
+    .search-help-link{
+        display: none;
+    }
+}

@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - cookies_facebook_pixel
+id: facebook_pixel
+label: 'Facebook Pixel'
+group: tracking
+info:
+  format: 'full_html'
+  value: ''
+url: 'https://www.facebook.com/policies/cookies'
+consent: true

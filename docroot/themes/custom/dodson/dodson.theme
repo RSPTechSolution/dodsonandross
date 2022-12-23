@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Functions to support theming in the Dodson theme.
+ */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Template\Attribute;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Drupal\Core\Url;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+
+/**
+ * Implements hook_preprocess_field() to add classes to the site logo.
+ */
+function dodson_preprocess_field_field_page_logo(&$vars)
+{
+  foreach(array_keys($vars['items']) as $delta)
+  {
+    $vars['items'][$delta]['attributes']->setAttribute('class', 'dodsonLogo');
+  }
+}
+
+function dodson_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_Id = substr($form_id, 0, 53);
+	if($form_Id == 'commerce_order_item_add_to_cart_form_commerce_product') {
+        $arraydata = explode('commerce_order_item_add_to_cart_form_commerce_product_', $form_id);
+        $product_id = $arraydata[1];
+        $product = \Drupal\commerce_product\Entity\Product::load($product_id); //load product
+        $bundle = $product->bundle(); //get variation of product
+        if($bundle == 'study_group'){
+          $form['actions']['submit']['#value'] = t('Enroll');
+        }else{
+          $form['actions']['submit']['#value'] = t('Buy');
+        }
+     
+      }
+ 
+
+	if (strpos($form_Id, 'commerce_order_item_add_to_cart_form_commerce_product') !== false) {
+    	$form['actions']['submit']['#submit'][] = 'commerce_cart_redirection_cart_alter_sub';
+  	}
+
+  if ($form_Id == 'commerce_order_item_add_to_cart_form_commerce_product') {
+    if($product_id == 381){
+      $form['actions']['submit']['#value']= t('Buy Here');
+    }
+  }
+}
+
+function commerce_cart_redirection_cart_alter_sub(&$form, FormStateInterface $form_state) {
+  // $response =  new RedirectResponse('/cart');
+  // $response->send();
+	// $form_state->setRedirect('commerce_cart.page');
+	$cart_id = $form_state->get('cart_id');
+
+  $url = Url::fromRoute('commerce_checkout.form',
+    ['commerce_order' => $cart_id]
+  );
+
+  $form_state->setRedirectUrl($url);
+}
+
+
+function dodson_preprocess_node(&$variables) {
+  switch ($variables['node']->getType()) {
+    case "audio_podcast":
+       $audio_upload = $variables['node']->get('field_audio_upload')->getValue();
+       $sound_cloud_id = $variables['node']->get('field_sound_cloud_id')->getValue();
+       if(!empty($audio_upload)) {
+          if(empty($sound_cloud_id)) {
+            $variables['attributes']['class'][] ='audio_play';
+          } 
+       }
+    break;
+    
+  }
+  
+}
+
+function dodson_preprocess_views_view(&$variables) {
+  $view = $variables['view'];
+  $id = $view->storage->id();
+  if($id == 'audio_podcast' && $view->current_display == 'page_1' || $view->current_display == 'block_1' || $view->current_display == 'block_2') {
+    $current_user_roles = \Drupal::currentUser()->getRoles();
+    if (in_array('administrator', $current_user_roles) || in_array('basic_user', $current_user_roles) || in_array('body_sex_leader', $current_user_roles) || in_array('body_sex_client', $current_user_roles) || in_array('access_audio_podcast', $current_user_roles) ) {
+      $variables['role'] = 'administrator';
+    }
+
+  }
+  
+}
+
+function dodson_preprocess_html(&$variables) {
+  $viewport = array(
+// '#type' => 'html_tag',
+    '#tag' => 'meta',
+    '#attributes' => array(
+      'name' => 'viewport',
+      'content' => 'width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no',
+      ),
+    );
+    $variables['page']['#attached']['html_head'][] = [$viewport, 'viewport',];
+}
+
+function dodson_theme_suggestions_page_alter(array &$suggestions, array $variables) {
+  if ($node = \Drupal::routeMatch()->getParameter('node')) {
+  $suggestions[] = 'page__' . $node->bundle();
+  }
+  }
+?>

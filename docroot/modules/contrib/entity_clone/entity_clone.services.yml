@@ -1,0 +1,12 @@
+services:
+  entity_clone.settings.manager:
+    class: Drupal\entity_clone\EntityCloneSettingsManager
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@config.factory']
+  entity_clone.route_subscriber:
+    class: Drupal\entity_clone\Routing\RouteSubscriber
+    arguments: ['@entity_type.manager']
+    tags:
+      - { name: event_subscriber }
+  entity_clone.service_provider:
+    class: Drupal\entity_clone\Services\EntityCloneServiceProvider
+    arguments: [ ]

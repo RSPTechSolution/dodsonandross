@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Contains vapn.module.
+ */
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function vapn_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the vapn module.
+    case 'help.page.vapn':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('View Permissions Per Node') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function vapn_form_node_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  // Make sure it's a valid type.
+  if (!\Drupal::service('vapn.handler')->checkIfContentTypeEnabled()) {
+    // Not a VAPN form.
+    return;
+  }
+  $form['vapn'] = array(
+    '#type' => 'details',
+    '#title' => t('View access per node'),
+    '#group' => 'advanced',
+    '#open' => FALSE,
+  );
+  $form['vapn']['description']= array(
+    '#prefix' => '<div class="form-item">',
+    '#suffix' => '</div>',
+    '#markup' => t('Select which roles can view this node.  Select none for default.'),
+  );
+  // Get the default roles.
+  $default_roles = \Drupal::service('vapn.handler')->getDefaultsForNode($form_state);
+  $default_roles = $default_roles ? $default_roles : array();
+  // Role checkboxes.
+  $form['vapn']['vapn_roles'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Select roles'),
+    '#title_display' => 'invisible',
+    '#options' => array(),
+    '#default_value' => $default_roles,
+  );
+  // Get all user roles.
+  $user_roles = user_roles(FALSE);
+  // Get users that can bypass access control (skip anon - that would be weird).
+  $user_node_bypass = user_roles(TRUE, 'bypass node access');
+  $user_vapn_bypass = user_roles(FALSE, 'bypass vapn');
+  // Remove the users that can bypass access control.
+  $remain_user_roles = array_diff_key($user_roles, $user_node_bypass, $user_vapn_bypass);
+  // Each non-bypass role.
+  $defaults = [];
+  foreach ($remain_user_roles as $role_id => $role_obj) {
+    $form['vapn']['vapn_roles']['#options'][$role_id] = $role_obj->label();
+  }
+
+  // Add submission handler.
+  $form['actions']['submit']['#submit'][] = 'vapn_node_form_submit';
+}
+
+function vapn_node_form_submit($form, \Drupal\Core\Form\FormStateInterface $form_state){
+  $vals = $form_state->getValues();
+  if(isset($vals['vapn_roles'])){
+    $roles = $vals['vapn_roles'];
+    if($roles){
+      $nid= $form_state->getFormObject()->getEntity()->id();
+      \Drupal::service('vapn.handler')->cleanEntriesByEntityId($nid);
+      foreach($roles as $rid => $rid_selected){
+        if( $rid === $rid_selected ) {
+          \Drupal::service('vapn.handler')->insertRoleEntry($nid, $rid);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_node_access().
+ */
+function vapn_node_access(\Drupal\node\NodeInterface $node, $op, \Drupal\Core\Session\AccountInterface $account) {
+  // Only concerned with viewing.
+  if ($op != 'view') {
+
+    // Ignore if any other op.
+    return AccessResult::neutral();
+  }
+
+  // Make sure there's a node id.
+  if (empty($node->nid)) {
+
+    // Should never happen but ignore if no nid.
+    return AccessResult::neutral();
+  }
+
+
+  $configEnabled = \Drupal::config('vapn.vapnconfig')->get('vapn_node_list');
+
+  // Check if it's a valid VAPN content type.
+  if (empty($node->getType()) || !in_array($node->getType(),$configEnabled,TRUE)) {
+
+    // Not a VAPN node type, we don't care.
+    return AccessResult::neutral();
+  }
+
+  // Get the records for this node.
+  $records = \Drupal::database()->select('vapn')
+    ->fields('vapn', array('rid'))
+    ->condition('nid', $node->id())
+    ->execute();
+
+  // Check that there is a record for this node.
+  if (!$allowed_roles = $records->fetchCol()) {
+
+    // No record.
+    return AccessResult::neutral();
+  }
+
+  // Make sure the user has one of the allowed roles.
+  $ret = count(array_intersect($allowed_roles, $account->getRoles())) ?
+
+    // User has access, great success.
+    AccessResult::allowed() :
+
+    // Permissions defined and not enabled, deny.
+    AccessResult::forbidden();
+
+  return $ret;
+}

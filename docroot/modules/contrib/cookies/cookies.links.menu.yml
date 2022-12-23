@@ -1,0 +1,27 @@
+cookies.config:
+  title: 'COOKiES'
+  route_name: cookies.config
+  description: 'COOKiES configuration'
+  parent: system.admin_config_system
+  weight: 0
+
+cookies.texts:
+  title: 'Widget texts'
+  route_name: cookies.texts
+  description: 'Translatable texts assigned in the COOKiES widget.'
+  parent: cookies.config
+  weight: 10
+
+entity.cookies_service_group.collection:
+  title: 'Groups'
+  route_name: entity.cookies_service_group.collection
+  description: 'Groups of third-party services (e.g. tracking or advertising)'
+  parent: cookies.config
+  weight: 15
+
+entity.cookies_service.collection:
+  title: 'Services'
+  route_name: entity.cookies_service.collection
+  description: 'Third-party services where user consent is required.'
+  parent: cookies.config
+  weight: 20

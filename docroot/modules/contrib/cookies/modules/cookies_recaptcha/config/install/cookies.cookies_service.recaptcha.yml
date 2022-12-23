@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - cookies_recaptcha
+id: recaptcha
+label: 'reCAPTCHA'
+group: tracking
+info:
+  format: 'full_html'
+  value: ''
+url: 'https://policies.google.com/privacy'
+consent: true

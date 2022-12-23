@@ -1,0 +1,14 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - cookies_ivw
+id: ivw
+label: 'IVW Tracking'
+group: tracking
+info:
+  format: 'full_html'
+  value: ''
+url: 'https://www.ivw.eu/digital/datenschutz-0'
+consent: true

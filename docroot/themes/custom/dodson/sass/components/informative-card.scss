@@ -1,0 +1,102 @@
+.paragraph--type--card.informative-card {
+
+  .paragraph--type--card {
+    background: #FFF;
+    color: $black;
+
+    .paragraph--type--title {
+      color: $black;
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 40px;
+      font-family: 'Merriweather', serif;
+      font-weight:700;
+    }
+    .paragraph--type--text, .paragraph--type--atom-rtf {
+      width: 90%;
+      font-size: 14px;
+      margin: 0 auto 30px;
+      p{
+        margin-bottom: 20px;
+      }
+    }
+    .paragraph--type--atom-button {
+      margin-bottom: 40px;
+      a {
+        padding: 10px 25px;
+        @media (max-width:767px) {
+          padding: 10px 17px;   
+        }
+      }
+    }
+  }
+  .paragraph--type--atom-button {
+    margin: 35px 0;
+  }
+
+  @include respond-to($tablet){
+    padding: 55px 0 0;
+    .field--name-field-card-section {
+      max-width: 95%;
+    }
+
+    .field--name-field-columns {
+      justify-content: space-between;
+    }
+
+    .field--name-field-columns .paragraph--type--column {
+      justify-content: space-between;
+      &:first-child{
+        width: 49%;
+      }
+      &:last-child{
+        width: 45%;
+      }
+      .paragraph--type--card {
+        .paragraph--type--title {
+          font-size: 36px;
+          margin: 0 0 14px 0;
+          text-align: left;
+        }
+        .paragraph--type--text {
+          margin: 0;
+        }
+        .paragraph--type--atom-button {
+          text-align: left;
+          margin-top: 14px;
+        }
+        .paragraph--type--atom-quote {
+          margin: 34px 0;
+        }
+      }
+    }
+    .paragraph--type--atom-button {
+      margin: 0 0 35px 0;
+    }
+
+  }
+
+  @include respond-to($desktop){
+    .field--name-field-card-section {
+      max-width: 1140px;
+    }
+    .paragraph--type--column {
+      width: 45%;
+      .paragraph--type--card {
+        .paragraph--type--text {
+          margin: 20px 0 30px 0;
+        }
+      }
+      .paragraph--type--image{
+        margin: 0 auto;
+      }
+    }
+  }
+}
+
+
+
+
+
+
+

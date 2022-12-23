@@ -1,0 +1,215 @@
+
+.page-node-type-blog {
+  .block-views-exposed-filter-blockarticles-page-1{
+      display: none;
+  }
+  .view-articles{
+      .views-view-grid{
+          .views-row{
+              display: flex;
+              margin-bottom: 80px;
+          }
+          .views-col {
+              float: none;
+              margin-right: 15px;
+              width: auto !important;
+              max-width: 190px;
+          }
+          .field--name-field-image{
+              a{
+                  width: 100%;
+              }
+              img{
+                  width: 100%;
+              }
+          }
+      }
+      h2{
+          font-size: 16px;
+          font-weight: normal;
+          height: 66px;
+          margin-bottom: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+      }
+      .field--name-body.field--type-text-with-summary{
+          font-size: 12px;
+          line-height: 19px;
+          height: 150px;
+      }
+      .node__links{
+          .node-readmore{
+              padding: 0;
+              &:after{
+                  content: ' ...';
+              }
+          }
+          .comment-forbidden{
+              display: none;
+          }
+      }
+  }
+  .node--view-mode-teaser{
+      .field--type-text-with-summary{
+          height: 150px;
+      }
+      .text-formatted{
+          font-size: 14px;
+      }
+      article.profile,
+      .field--name-field-display-name,
+      .node__submitted{
+          display: none;
+      }
+      h2 a{
+          font-size: 16px;
+          display: inline-block;
+          min-height: 75px;
+      }
+      .node__content .field--type-text-with-summary{
+          margin: 10px auto 0 !important;
+      }
+  }
+  .node--view-mode-full{
+      h2{
+          font-size: 32px;
+      }
+  }
+  .articles__categories{
+      .paragraph--type--card{
+          margin-top: 25px;
+      }
+      .field--name-field-category{
+          margin: 0;
+      }
+  }
+  .article-title{
+      font-size: 30px;
+  }
+  article{
+      .author-display{
+      overflow: hidden;
+      // .profile{
+          // }
+      }
+      .node__links{
+          display: none;
+      }
+  }
+  .field--name-user-picture,
+  .submitted_date,
+  .field--name-field-display-name{
+      // display: block;
+      // clear: both;
+      float: left;
+      color: #929292;
+      font-size: 16px;
+  }
+  .field--name-field-display-name{
+      margin-top: 30px;
+      margin-left: 20px;
+  }
+  .submitted_date{
+      position: absolute;
+      margin-top: 50px;
+      margin-left: 109px;
+  }
+  .field--name-user-picture img{
+      border-radius: 50%;
+  }
+
+  .page__node{
+
+    .node__content {
+      .field--name-field-components > .field__item:first-child .paragraph--type--image {
+        display: none;
+      }
+      .article__image {
+        height: 150px;
+        overflow: hidden;
+        margin: 40px 0 15px;
+        @media (max-width:1023px) {
+          height: auto;  
+        }     
+        img{
+          width: 100%;
+          @media (max-width:767) {
+            height: auto;
+          }
+        }
+      }
+      .article-title h2{
+        color: #4A4A4A;
+        font-size: 22px;
+        font-weight: normal;
+        margin-bottom: 20px;
+      }
+    }
+    p {
+      color: #4A4A4A;
+      line-height: 25px;
+      margin-bottom: 15px;
+    }
+    .field--name-field-atom-rtf-with-summary img{
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    @include respond-to($desktop){
+      .node__content {
+        width: 85%;
+        margin: 0 auto;
+        .article__image{
+          height: 320px;
+          margin-top: 10px;
+        }
+        .article-title h2{
+          font-size: 30px;
+          width: 600px;
+        }
+      }
+    }
+  }
+}
+
+.views-field.views-field-view-node  span  a{
+    margin-top: 10px;
+    display: inline-block;
+}
+
+@media(min-width: 768px){
+  nav#block-verticalnav-2 {
+      display: none;
+  }
+}
+@media(max-width: 767px){
+  nav#block-verticalnav-2 {
+    ul.menu {
+      li.menu-item {
+        border-bottom: 1px solid #C4C4C4;
+        a {
+          &:hover {
+            color: #651B31;
+          }
+        }
+      }
+      >li.menu-item {
+        a {
+          display: block;
+          padding: 12px 20px 12px 0;
+          color: #4A4A4A;
+          font-size: 15px;
+          font-weight: 600;
+          transition: 0.3s all;
+        }
+      }
+      li.menu-item.menu-item--expanded {
+        list-style: none;
+        ul.menu {
+          margin-left: 0;
+        }
+      }
+      margin-left: 0;
+    }
+  }
+}

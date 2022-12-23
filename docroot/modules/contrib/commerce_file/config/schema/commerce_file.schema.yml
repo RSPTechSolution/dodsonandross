@@ -1,0 +1,16 @@
+commerce_file.settings:
+  type: config_object
+  label: 'Commerce file settings'
+  mapping:
+    enable_download_limit:
+      type: boolean
+    download_limit:
+      type: integer
+
+field.formatter.settings.commerce_file_download_link:
+  type: mapping
+  label: 'Generic file format settings'
+  mapping:
+    use_description_as_link_text:
+      type: boolean
+      label: 'Replace the file name by its description when available'

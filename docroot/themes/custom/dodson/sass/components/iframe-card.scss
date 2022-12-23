@@ -1,0 +1,19 @@
+/**
+ * Iframe card component styles
+ */
+ .paragraph--type--card.iframe-card{
+
+  @include respond-to($tablet){
+    > .field--name-field-card-section{
+      height: 505px;
+      max-width: 1140px;
+    }
+
+  }
+  @include respond-to($desktop){
+    text-align: center;
+    iframe{
+     
+    }
+  }
+}

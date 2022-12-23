@@ -1,0 +1,14 @@
+name: 'COOKiES reCAPTCHA'
+type: module
+description: 'COOKiES submodule to manage a third-party-integration of reCAPTCHA inside of COOKiES user consent management.'
+core: 8.x
+core_version_requirement: ^8 || ^9
+package: 'COOKiES'
+dependencies:
+  - cookies:cookies
+  - recaptcha:recaptcha
+
+# Information added by Drupal.org packaging script on 2022-08-17
+version: '1.1.0'
+project: 'cookies'
+datestamp: 1660736739

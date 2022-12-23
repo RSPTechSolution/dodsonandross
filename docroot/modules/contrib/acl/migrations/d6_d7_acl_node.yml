@@ -1,0 +1,42 @@
+id: d6_d7_acl_node
+label: Drupal 6/7 Access Control Lists node grants table
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: d6_d7_acl_table
+  table_name: acl_node
+  fields_list:
+    - acl_id
+    - nid
+    - grant_view
+    - grant_update
+    - grant_delete
+    - priority
+  ids:
+    acl_id:
+      type: integer
+    nid:
+      type: integer
+process:
+  acl_id: acl_id
+  nid: nid
+  grant_view: grant_view
+  grant_update: grant_update
+  grant_delete: grant_delete
+  priority: priority
+destination:
+  plugin: acl_table
+  table_name: acl_node
+  fields_list:
+    - acl_id
+    - nid
+    - grant_view
+    - grant_update
+    - grant_delete
+    - priority
+  ids:
+    acl_id:
+      type: integer
+    nid:
+      type: integer

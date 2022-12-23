@@ -1,0 +1,5 @@
+entity.commerce_license.add_page:
+  route_name: entity.commerce_license.add_page
+  title: 'Add license'
+  appears_on:
+    - entity.commerce_license.collection

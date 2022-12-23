@@ -1,0 +1,48 @@
+build:
+  assessment:
+    validate_codebase:
+      phplint: {  }
+      container_composer: null
+      csslint:
+        halt-on-fail: false
+      eslint:
+        halt-on-fail: false
+      phpcs:
+        sniff-all-files: false
+        halt-on-fail: false
+        coder-version: ^8.2@stable
+    testing:
+      # Start a localstack server for testing.
+      # Aliases list:
+      # - s3fslocalstack : Custom Endpoint target.
+      # - s3fs-test-bucket.s3fslocalstack : Custom Endpoint vhost target.
+      host_command:
+        commands:
+          - "docker run -d --name s3fs_localstack --rm -p 4566:4566 -e EDGE_PORT=4566 -e SERVICES=s3 -e HOSTNAME_EXTERNAL=s3fslocalstack localstack/localstack:0.12.14"
+          - "docker network connect --alias s3fslocalstack --alias s3fs-test-bucket.s3fslocalstack drupalci_nw s3fs_localstack"
+        halt-on-fail: false
+      run_tests.standard:
+        types: 'Simpletest,PHPUnit-Unit,PHPUnit-Kernel,PHPUnit-Functional'
+        testgroups: '--all'
+        color: true
+        die-on-fail: false
+        keep-results: true
+        keep-results-table: false
+        verbose: false
+        concurrency: 0
+        halt-on-fail: false
+        repeat: 1
+        suppress-deprecations: true
+      run_tests.js:
+        concurrency: 1
+        types: PHPUnit-FunctionalJavascript
+        testgroups: '--all'
+        color: true
+        die-on-fail: false
+        keep-results: true
+        keep-results-table: false
+        verbose: false
+        halt-on-fail: false
+        repeat: 1
+        suppress-deprecations: true
+      nightwatchjs: {  }

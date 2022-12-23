@@ -1,0 +1,55 @@
+/*---
+ * Imports
+ * Add all the sass imports from the project in this file
+ * Base global styles = Add all the global stylesheets
+ * Component styles = Add the stylesheets component related
+ * Page styles = Add the page specific styles
+---*/
+
+//Base global styles
+@import 'normalize';
+@import 'vars';
+@import 'mixins';
+@import 'global';
+
+//Vendor
+@import 'vendor/slick';
+@import 'vendor/slick-theme';
+
+//Component styles
+@import 'components/nav';
+@import 'components/header';
+@import 'components/footer';
+@import 'components/paragraph-types';
+
+@import 'components/simple-band';
+@import 'components/video-card-with-item-list';
+@import 'components/item-list';
+@import 'components/video-card';
+@import 'components/videos';
+
+@import 'components/featured-people';
+@import 'components/image-preview';
+@import 'components/featured-product';
+@import 'components/image-gallery';
+@import 'components/informative-card';
+@import 'components/iframe-card';
+@import 'components/atom-view';
+@import 'components/view-gallery';
+@import 'components/thumb-slider';
+
+//Page styles
+@import 'components/page-node';
+@import 'components/articles';
+@import 'components/leaders';
+
+@import 'components/forms';
+@import 'components/search-results';
+
+//Commerce /cart
+@import 'components/commerce';  
+@import 'components/order.scss';  
+
+
+@import 'components/common.scss';    
+ 

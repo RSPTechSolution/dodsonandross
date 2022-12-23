@@ -1,0 +1,125 @@
+<?php
+
+/**
+ * @file
+ * Containes the database tables required by the OneAll Social Login module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function social_login_schema() {
+
+  // Used to link social network profiles to now internal authmap entries.
+  $schema['oneall_social_login_identities'] = [
+    'description' => 'Used to link social network profiles to authmap entries.',
+    'fields' => [
+      'oasliid' => [
+        'description' => 'The primary key of this table.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'aid' => [
+        'description' => 'Foreign key to link entries of this table to entries in the authmap table.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'identity_token' => [
+        'description' => 'Unique identity_token for a social network profile, returned by the OneAll API.',
+        'type' => 'varchar',
+        'length' => 48,
+        'not null' => TRUE,
+      ],
+      'provider_name' => [
+        'description' => 'Social network provider (Facebook, Twitter ...) of this identity.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ],
+    ],
+    'indexes' => [
+      'identity_token' => [
+        'identity_token',
+      ],
+      'aid' => [
+        'aid',
+      ],
+    ],
+    'foreign keys' => [
+      'aid' => [
+        'table' => 'oneall_social_authmap',
+        'columns' => [
+          'aid' => 'aid',
+        ],
+      ],
+    ],
+    'primary key' => [
+      'oasliid',
+    ],
+  ];
+
+  // New authmap entries (authmap removed in D8).
+  $schema['oneall_social_login_authmap'] = [
+    'description' => 'D7 equivalent authmap entries.',
+    'fields' => [
+      'aid' => [
+        'description' => 'The primary key of this table.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'description' => 'User id.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'user_token' => [
+        'description' => 'Unique user_token for a social network user, returned by the OneAll API.',
+        'type' => 'varchar',
+        'length' => 48,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => [
+      'aid',
+    ],
+  ];
+
+  // Used to store module settings.
+  $schema['oneall_social_login_settings'] = [
+    'description' => 'Used to store module settings.',
+    'fields' => [
+      'oaslsid' => [
+        'description' => 'The primary key of this table.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'setting' => [
+        'description' => 'The name of the setting.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ],
+      'value' => [
+        'description' => 'The value of the setting.',
+        'type' => 'varchar',
+        'length' => '64',
+        'not null' => TRUE,
+      ],
+    ],
+    'indexes' => [
+      'setting' => [
+        'setting',
+      ],
+    ],
+    'primary key' => [
+      'oaslsid',
+    ],
+  ];
+
+  return $schema;
+}

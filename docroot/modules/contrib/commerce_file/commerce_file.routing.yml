@@ -1,0 +1,20 @@
+commerce_file.settings_form:
+  path: '/admin/commerce/config/license/file'
+  defaults:
+    _title: File
+    _form: '\Drupal\commerce_file\Form\SettingsForm'
+  requirements:
+    _permission: 'administer commerce_license'
+
+commerce_file.download:
+  path: '/commerce-file/{file}/download'
+  defaults:
+    _controller: '\Drupal\commerce_file\Controller\FileDownloadController::download'
+    _title: 'Download file'
+  options:
+    no_cache: TRUE
+    parameters:
+      file:
+        type: 'entity:file'
+  requirements:
+    _custom_access: '\Drupal\commerce_file\Controller\FileDownloadController::access'

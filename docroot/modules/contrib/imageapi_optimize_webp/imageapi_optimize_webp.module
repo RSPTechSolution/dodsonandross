@@ -1,0 +1,11 @@
+<?php
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function imageapi_optimize_webp_entity_type_alter(array &$entity_types) {
+  if (isset($entity_types['imageapi_optimize_pipeline'])) {
+    $entity_types['imageapi_optimize_pipeline']->setClass('Drupal\imageapi_optimize_webp\Entity\ImageAPIOptimizeWebPPipeline');
+  }
+  return [];
+}

@@ -1,0 +1,96 @@
+s3fs.settings:
+  type: config_object
+  mapping:
+    credentials_file:
+      type: string
+      label: 'Custom Credentials File Location'
+    bucket:
+      type: string
+      label: 'S3 Bucket Name'
+    region:
+      type: string
+      label: 'S3 Region'
+    use_cname:
+      type: boolean
+      label: 'Enable CNAME'
+    domain_root:
+      type: string
+      label: 'Domain Root'
+    use_customhost:
+      type: boolean
+      label: 'Use a Custom Host'
+    hostname:
+      type: string
+      label: 'Hostname'
+    domain:
+      type: string
+      label: 'CDN Domain Name'
+    use_path_style_endpoint:
+      type: boolean
+      label: 'Use path-style endpoint'
+    disable_version_sync:
+      type: boolean
+      label: 'Disable syncing versions'
+    cache_control_header:
+      type: string
+      label: 'S3 Object Cache-Control Header'
+    encryption:
+      type: string
+      label: 'Server-Side Encryption'
+    use_https:
+      type: boolean
+      label: 'Always serve files from S3 via HTTPS'
+    ignore_cache:
+      type: boolean
+      label: 'Ignore the file metadata cache'
+    read_only:
+      type: boolean
+      label: 'When using the S3 bucket as read only, bypass validation of the ability to upload'
+    disable_cert_verify:
+      type: boolean
+      label: 'Disable verification of SSL/TLS certificate'
+    redirect_styles_ttl:
+      type: integer
+      label: 'The TTL of the redirect cache to the s3 styles'
+    root_folder:
+      type: string
+      label: 'Root Folder'
+    public_folder:
+      type: string
+      label: 'Public Folder'
+    private_folder:
+      type: string
+      label: 'Private Folder'
+    presigned_urls:
+      type: string
+      label: 'Presigned URLs'
+    saveas:
+      type: string
+      label: 'Force Save As'
+    torrents:
+      type: string
+      label: 'Torrents'
+    use_cssjs_host:
+      type: boolean
+      label: 'Use a custom domain for links inside CSS/JS files'
+    cssjs_host:
+      type: string
+      label: 'Custom domain for links inside CSS/JS files'
+    use_credentials_cache:
+      type: boolean
+      label: 'Enable caching of credentials'
+    credentials_cache_dir:
+      type: string
+      label: 'Directory to store cached credentials in'
+    keymodule:
+      type: mapping
+      mapping:
+        secret_key_name:
+          type: string
+          label: 'Key module storage of secret key'
+        access_key_name:
+          type: string
+          label: 'Key module storage of access key'
+    disable_shared_config_files:
+      type: boolean
+      label: 'Disable use of shared config files'

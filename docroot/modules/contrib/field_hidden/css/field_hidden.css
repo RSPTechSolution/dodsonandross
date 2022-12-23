@@ -1,0 +1,7 @@
+/* Module field_hidden: prevent widgets of multiple-rowed instances
+ * (field_multiple_value containers) from being displayed. */
+div.field-widget-field-hidden-number div.form-item,
+div.field-widget-field-hidden-string-textfield div.form-item,
+div.field-widget-field-hidden-string-textarea div.form-item {
+  display: none;
+}

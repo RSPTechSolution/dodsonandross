@@ -1,0 +1,21 @@
+# Taken from https://github.com/vincentorback/WebP-images-with-htaccess
+# Include this in your global .htaccess
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Check if browser support WebP images
+  RewriteCond %{HTTP_ACCEPT} image/webp
+
+  # Check if WebP replacement image exists
+  RewriteCond %{DOCUMENT_ROOT}/$1.$2.webp -f
+
+  # Serve WebP image instead
+  RewriteRule (.+)\.(jpe?g|png)$ $1.$2.webp [T=image/webp,E=accept:1]
+</IfModule>
+
+<IfModule mod_headers.c>
+	Header append Vary Accept env=REDIRECT_accept
+</IfModule>
+
+AddType image/webp .webp

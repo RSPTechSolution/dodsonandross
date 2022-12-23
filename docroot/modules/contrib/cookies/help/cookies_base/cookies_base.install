@@ -1,0 +1,14 @@
+<?php
+
+/**
+ * @file
+ * Installation information for the 'Cookies Google Analytics' module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function cookies_base_install() {
+  // Load module after other third-party module.
+  module_set_weight('cookies_base', 11);
+}

@@ -1,0 +1,25 @@
+# Migration for files stored in D7 using s3:// scheme.
+id: d7_s3fs_s3_migrate
+migration_tags:
+  - 'Drupal 7'
+  - s3fs
+label: 'Files stored using s3:// scheme.'
+source:
+  plugin: d7_file
+  scheme: s3
+  constants:
+    # Leave empty. Required to avoid undefined index warnings.
+    source_base_path: ''
+process:
+  # If you are using this file to build a custom migration consider removing
+  # the fid field to allow incremental migrations.
+  fid: fid
+  filename: filename
+  uri: uri
+  filesize: filesize
+  status: status
+  created: timestamp
+  changed: timestamp
+  uid: uid
+destination:
+  plugin: 'entity:file'

@@ -1,0 +1,8 @@
+services:
+  lazyloader.visibility_checker:
+    class: \Drupal\lazyloader\VisibilityChecker
+    arguments: ['@config.factory', '@entity_type.manager', '@plugin.manager.condition']
+
+  lazyloader.preprocess:
+    class: \Drupal\lazyloader\ThemePreprocess
+    arguments: ['@config.factory']

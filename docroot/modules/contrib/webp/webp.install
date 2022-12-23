@@ -1,0 +1,76 @@
+<?php
+
+/**
+ * @file
+ * Contains install and update functions for WebP.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function webp_requirements($phase) {
+  $requirements = [];
+
+  // The existence of GD, does not mean, that it was compiled with webp
+  // support. So check if it has webp capabilities. Otherwise prevent the
+  // installation or show an error on the status page.
+  $gd_info = gd_info();
+  // Let's convert to capital case, so we ensure we always cover both.
+  $supported_formats = [];
+  if (extension_loaded('imagick')) {
+    $supported_formats = array_map('strtoupper', Imagick::queryFormats());
+  }
+
+  if (!$gd_info['WebP Support'] && !in_array("WEBP", $supported_formats)) {
+    $requirements['webp'] = [
+      'title' => t('WebP'),
+      'description' => t('The GD or ImageMagick library must be compiled with WebP support on your server. For more information consult the <a href=":php_documentation">PHP documentation</a>.', [':php_documentation' => 'http://php.net/manual/en/book.image.php']),
+      'severity' => REQUIREMENT_ERROR,
+    ];
+  }
+
+  return $requirements;
+}
+
+/**
+ * Implements hook_install().
+ */
+function webp_install() {
+  // If the Image API Optimize module exists, the user needs to configure
+  // a processor first, so there's no use in deleting all image style
+  // derivatives.
+  if (!\Drupal::moduleHandler()->moduleExists('imageapi_optimize')) {
+    /* @var \Drupal\webp\Webp $webp */
+    $webp = \Drupal::service('webp.webp');
+    $webp->deleteImageStyleDerivatives();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function webp_uninstall() {
+  if (\Drupal::moduleHandler()->moduleExists('imageapi_optimize')) {
+    // imageapi_optimize: delete the WebP processor from all pipelines.
+    $storage = \Drupal::entityTypeManager()->getStorage('imageapi_optimize_pipeline');
+    if ($pipelines = $storage->loadMultiple()) {
+      /* @var \Drupal\imageapi_optimize\Entity\ImageAPIOptimizePipeline $pipeline */
+      foreach ($pipelines as $pipeline) {
+        /* @var \Drupal\imageapi_optimize\ImageAPIOptimizeProcessorPluginCollection $processors */
+        if ($processors = $pipeline->getProcessors()) {
+          /** @var \Drupal\imageapi_optimize\ImageAPIOptimizeProcessorBase $processor */
+          foreach ($processors as $processor) {
+            if ($processor->getPluginId() === 'webp_webp') {
+              $pipeline->deleteProcessor($processor);
+            }
+          }
+        }
+      }
+    }
+  }
+  else {
+    /* @var \Drupal\webp\Webp $webp */
+    $webp = \Drupal::service('webp.webp');
+    $webp->deleteImageStyleDerivatives();
+  }
+}

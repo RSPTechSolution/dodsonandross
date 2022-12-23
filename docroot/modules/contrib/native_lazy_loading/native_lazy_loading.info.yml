@@ -1,0 +1,10 @@
+name: Native Lazy Loading
+type: module
+description: "Ensure images are natively lazy-loaded by browsers supporting the loading='lazy' img attribute."
+core_version_requirement: ^8 || ^9
+package: Media
+
+# Information added by Drupal.org packaging script on 2021-05-05
+version: '1.1.0-rc1'
+project: 'native_lazy_loading'
+datestamp: 1620227909

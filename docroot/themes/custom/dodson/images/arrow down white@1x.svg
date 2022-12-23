@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="11px" height="6px" viewBox="0 0 11 6" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 47.1 (45422) - http://www.bohemiancoding.com/sketch -->
+    <title>arrow down white@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="15.497789 15 17 13.6138152 12 9 7 13.6138152 8.50221105 15 12 11.7723697"></polygon>
+    </defs>
+    <g id="D&amp;R-Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Guide----General" transform="translate(-846.000000, -1329.000000)">
+            <g id="Group-4" transform="translate(703.000000, 1053.500000)">
+                <g id="Group" transform="translate(0.448936, 132.803320)">
+                    <g id="uxpower/Icon/Arrow-Down" transform="translate(136.324705, 133.660871)">
+                        <g id="Group">
+                            <rect id="Bounding-Box" x="0" y="0" width="24" height="24"></rect>
+                            <mask id="mask-2" fill="white">
+                                <use xlink:href="#path-1"></use>
+                            </mask>
+                            <g id="Arrow" fill-rule="nonzero" transform="translate(12.000000, 12.000000) rotate(-180.000000) translate(-12.000000, -12.000000) "></g>
+                            <g id="uxpower/Mixin/Fill/White" mask="url(#mask-2)" fill="#FFFFFF">
+                                <rect id="Box" x="0" y="0" width="24" height="24"></rect>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

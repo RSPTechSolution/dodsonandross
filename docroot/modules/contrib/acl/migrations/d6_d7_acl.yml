@@ -1,0 +1,14 @@
+id: d6_d7_acl
+label: Drupal 6/7 base Access Control Lists table
+migration_tags:
+  - Drupal 6
+  - Drupal 7
+source:
+  plugin: d6_d7_acl_list
+process:
+  acl_id: acl_id
+  module: module
+  name: name
+  figure: number
+destination:
+  plugin: acl_list
